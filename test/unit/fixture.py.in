@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+
+##############################################################################
+#                                                                            #
+# Copyright (C) 2024 MachineWare GmbH                                        #
+# All Rights Reserved                                                        #
+#                                                                            #
+# This is work is licensed under the terms described in the LICENSE file     #
+# found in the root directory of this source tree.                           #
+#                                                                            #
+##############################################################################
+
+import subprocess
+import sys
+import os
+import re
+from pexpect.popen_spawn import PopenSpawn
+
+log = sys.stdout
+env = os.environ
+
+for var in [v for v in re.split(r'(?<!\\);', '@env@') if v]:
+    val = var.split('=', 1)
+    env[val[0].strip()] = val[1].strip() if len(val) > 1 else ''
+for var, val in env.items():
+    print(f'{var} = {val}')
+
+cmd = ['$<TARGET_FILE:sil-kit-registry>', '-s']
+pr = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
+pr.expect('SIL Kit Registry listening on silkit://localhost:8500')
+
+if '@mode@' != 'autonomous':
+    cmd = ['$<TARGET_FILE:sil-kit-system-controller>', '--non-interactive', '@ARGN@']
+    pc = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
+    pc.expect('Creating participant \'SystemController\' with registry silkit://localhost:8500')
+
+cmd = ['$<TARGET_FILE:@nm@>']
+i = 0
+for var in '@ARGN@'.split(';'):
+    cmd.extend(['-c', f'system.participant{i}.mode=@mode@'])
+    cmd.extend(['-c', f'system.participant{i}.name={var}'])
+    i += 1
+cmd.append('@CMAKE_CURRENT_SOURCE_DIR@')
+print(cmd)
+
+result = subprocess.run(cmd, env=env)
+
+if '@mode@' != 'autonomous':
+    pc.kill(15)
+    pc.wait()
+
+pr.kill(15)
+pr.wait()
+
+sys.exit(result.returncode)

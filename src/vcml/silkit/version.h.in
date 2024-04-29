@@ -1,0 +1,28 @@
+/******************************************************************************
+ *                                                                            *
+ * Copyright (C) 2024 MachineWare GmbH                                        *
+ * All Rights Reserved                                                        *
+ *                                                                            *
+ * This is work is licensed under the terms described in the LICENSE file     *
+ * found in the root directory of this source tree.                           *
+ *                                                                            *
+ ******************************************************************************/
+
+#ifndef VCML_SILKIT_VERSION_H
+#define VCML_SILKIT_VERSION_H
+
+#define VCML_SILKIT_VERSION_MAJOR    @PROJECT_VERSION_MAJOR@
+#define VCML_SILKIT_VERSION_MINOR    @PROJECT_VERSION_MINOR@
+#define VCML_SILKIT_VERSION_PATCH    @PROJECT_VERSION_PATCH@
+
+#define VCML_SILKIT_GIT_REV          "@VCML_SILKIT_GIT_REV@"
+#define VCML_SILKIT_GIT_REV_SHORT    "@VCML_SILKIT_GIT_REV_SHORT@"
+
+#define VCML_SILKIT_VERSION          @VCML_SILKIT_VERSION_INT@
+#define VCML_SILKIT_VERSION_STRING   "@VCML_SILKIT_VERSION_STRING@"
+
+#include <mwr.h>
+
+MWR_DECLARE_MODULE_COPYRIGHT(VCML_SILKIT, "vcml-silkit", 2024)
+
+#endif

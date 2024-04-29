@@ -1,0 +1,18 @@
+[submodule "spdlog"]
+	path = ThirdParty/spdlog
+	url = https://github.com/gabime/spdlog
+[submodule "ThirdParty/yaml-cpp"]
+	path = ThirdParty/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp
+[submodule "ThirdParty/asio"]
+	path = ThirdParty/asio
+	url = https://github.com/chriskohlhoff/asio.git
+[submodule "ThirdParty/fmt"]
+	path = ThirdParty/fmt
+	url = https://github.com/fmtlib/fmt
+[submodule "ThirdParty/googletest"]
+	path = ThirdParty/googletest
+	url = https://github.com/google/googletest
+[submodule "ThirdParty/oatpp"]
+	path = ThirdParty/oatpp
+	url = https://github.com/oatpp/oatpp.git
