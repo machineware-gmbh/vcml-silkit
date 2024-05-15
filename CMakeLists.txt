@@ -5,6 +5,8 @@ include(cmake/common.cmake)
 
 find_package(Git REQUIRED)
 
+set(VCML_SILKIT_TESTS OFF CACHE BOOL "Build unit tests")
+
 option(SILKIT_BUILD_TESTS "" OFF)
 option(SILKIT_BUILD_DEMOS "" OFF)
 # ToDo: Fix errorneos error msg "Could NOT find SILKIT..."
@@ -34,6 +36,11 @@ target_link_libraries(vcml-silkit PUBLIC vcml)
 target_link_libraries(vcml-silkit PUBLIC SilKit)
 
 set_target_properties(vcml-silkit PROPERTIES DEBUG_POSTFIX "d")
+
+if(VCML_SILKIT_TESTS)
+    enable_testing()
+    add_subdirectory(test)
+endif()
 
 install(TARGETS vcml-silkit DESTINATION lib)
 install(DIRECTORY ${inc}/ DESTINATION include)
