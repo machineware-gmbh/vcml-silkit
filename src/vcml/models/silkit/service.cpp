@@ -1,13 +1,12 @@
 /******************************************************************************
-*                                                                            *
-* Copyright 2024 MachineWare GmbH                                            *
-* All Rights Reserved                                                        *
-*                                                                            *
-* This is unpublished proprietary work and may not be used or disclosed to   *
-* third parties, copied or duplicated in any form, in whole or in part,      *
-* without prior written permission of the authors.                           *
-*                                                                            *
-******************************************************************************/
+ *                                                                            *
+ * Copyright (C) 2024 MachineWare GmbH                                        *
+ * All Rights Reserved                                                        *
+ *                                                                            *
+ * This is work is licensed under the terms described in the LICENSE file     *
+ * found in the root directory of this source tree.                           *
+ *                                                                            *
+ ******************************************************************************/
 
 #include "vcml/models/silkit/service.h"
 
