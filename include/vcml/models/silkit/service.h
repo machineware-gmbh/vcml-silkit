@@ -34,7 +34,6 @@ public:
 
     service() = delete;
     service(const service&) = delete;
-    service(service&&) = default;
 };
 
 } // namespace silkit

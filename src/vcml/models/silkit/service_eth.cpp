@@ -52,8 +52,8 @@ service_eth::service_eth(participant& part, const sc_module_name& nm):
     m_mtx(),
     m_rx(),
     m_ev("rxev"),
-    controller_name("controller_name", ""),
-    network_name("network_name", ""),
+    controller_name("controller_name", "vcml_default_controller"),
+    network_name("network_name", "vcml_default_network"),
     eth_tx("eth_tx"),
     eth_rx("eth_rx") {
     SC_HAS_PROCESS(service_eth);
