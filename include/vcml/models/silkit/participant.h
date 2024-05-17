@@ -8,8 +8,8 @@
  *                                                                            *
  ******************************************************************************/
 
-#ifndef VCML_SILKIT_BRIDGE_H
-#define VCML_SILKIT_BRIDGE_H
+#ifndef VCML_SILKIT_PARTICIPANT_H
+#define VCML_SILKIT_PARTICIPANT_H
 
 #include "vcml/core/types.h"
 #include "vcml/core/systemc.h"
@@ -18,7 +18,18 @@
 
 #include "vcml/properties/property.h"
 
-#include "silkit/SilKit.hpp"
+namespace SilKit {
+
+class IParticipant;
+
+namespace Services {
+namespace Orchestration {
+
+class ILifecycleService;
+
+} // namespace Orchestration
+} // namespace Services
+} // namespace SilKit
 
 namespace vcml {
 namespace silkit {
@@ -27,13 +38,14 @@ class participant : public module
 {
 private:
     SilKit::Services::Orchestration::ILifecycleService* m_lifecycle;
+    SilKit::IParticipant* m_silkit_part;
 
 public:
     property<string> registry_uri;
     property<string> name;
     property<string> cfg_path;
 
-    unique_ptr<SilKit::IParticipant> m_silkit_part;
+    virtual SilKit::IParticipant* get_silkit_part() { return m_silkit_part; }
 
     participant(const sc_module_name& nm);
     virtual ~participant();

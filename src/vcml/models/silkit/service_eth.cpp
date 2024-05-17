@@ -8,11 +8,10 @@
  *                                                                            *
  ******************************************************************************/
 
-#include "vcml/models/silkit/service_eth.h"
-
 #include "silkit/SilKit.hpp"
-
 #include "silkit/services/all.hpp"
+
+#include "vcml/models/silkit/service_eth.h"
 
 using namespace SilKit::Services::Ethernet;
 
@@ -46,7 +45,7 @@ void service_eth::eth_transmit() {
     }
 }
 
-service_eth::service_eth(participant& part, const sc_module_name& nm):
+service_eth::service_eth(const sc_module_name& nm, participant& part):
     service(part, nm),
     eth_host(),
     m_mtx(),
@@ -58,7 +57,7 @@ service_eth::service_eth(participant& part, const sc_module_name& nm):
     eth_rx("eth_rx") {
     SC_HAS_PROCESS(service_eth);
     SC_THREAD(eth_transmit);
-    m_eth_controller = part.m_silkit_part->CreateEthernetController(
+    m_eth_controller = part.get_silkit_part()->CreateEthernetController(
         controller_name, network_name);
 
     IEthernetController::FrameHandler frameHandler =

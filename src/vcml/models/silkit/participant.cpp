@@ -25,8 +25,8 @@ participant::participant(const sc_module_name& nm):
 
     auto participant_cfg = SilKit::Config::ParticipantConfigurationFromFile(
         cfg_path);
-    m_silkit_part = SilKit::CreateParticipant(participant_cfg, name,
-                                              registry_uri);
+    auto sp = SilKit::CreateParticipant(participant_cfg, name, registry_uri);
+    m_silkit_part = sp.release();
 
     m_lifecycle = m_silkit_part->CreateLifecycleService(
         { SilKit::Services::Orchestration::OperationMode::Coordinated });
@@ -39,7 +39,8 @@ participant::participant(const sc_module_name& nm):
 }
 
 participant::~participant() {
-    // nothing to do
+    if (m_silkit_part)
+        delete m_silkit_part;
 }
 
 } // namespace silkit
