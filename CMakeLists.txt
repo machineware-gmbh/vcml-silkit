@@ -17,8 +17,9 @@ find_package(Git REQUIRED)
 
 set(VCML_SILKIT_TESTS OFF CACHE BOOL "Build unit tests")
 
-option(SILKIT_BUILD_TESTS "" OFF)
-option(SILKIT_BUILD_DEMOS "" OFF)
+set(SILKIT_BUILD_TESTS OFF)
+set(SILKIT_BUILD_DEMOS OFF)
+set(SILKIT_BUILD_UTILITIES OFF)
 set(SILKIT_BUILD_STATIC ON)
 # ToDo: Fix errorneos error msg "Could NOT find SILKIT..."
 find_github_repo(SilKit "vectorgrp/sil-kit" "sil-kit/v4.0.48")
