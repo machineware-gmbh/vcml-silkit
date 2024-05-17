@@ -13,7 +13,7 @@
 namespace vcml {
 namespace silkit {
 
-service::service(participant& part, const sc_module_name& nm):
+service::service(const sc_module_name& nm, participant& part):
     module(nm), m_type("unknown"), log(part.log) {
 }
 

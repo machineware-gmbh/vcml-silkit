@@ -21,16 +21,7 @@
 
 #include "participant.h"
 #include "service.h"
-
-namespace SilKit {
-namespace Services {
-namespace Ethernet {
-
-class IEthernetController;
-
-} // namespace Ethernet
-} // namespace Services
-} // namespace SilKit
+#include "silkit.h"
 
 namespace vcml {
 namespace silkit {

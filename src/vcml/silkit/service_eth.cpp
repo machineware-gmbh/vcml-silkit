@@ -46,7 +46,7 @@ void service_eth::eth_transmit() {
 }
 
 service_eth::service_eth(const sc_module_name& nm, participant& part):
-    service(part, nm),
+    service(nm, part),
     eth_host(),
     m_mtx(),
     m_rx(),

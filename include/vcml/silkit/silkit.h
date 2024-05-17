@@ -8,35 +8,26 @@
  *                                                                            *
  ******************************************************************************/
 
-#ifndef VCML_SILKIT_SERVICE_H
-#define VCML_SILKIT_SERVICE_H
+#ifndef VCML_SILKIT_SILKIT_H
+#define VCML_SILKIT_SILKIT_H
 
-#include "vcml/core/types.h"
-#include "vcml/logging/logger.h"
+namespace SilKit {
 
-#include "participant.h"
+class IParticipant;
 
-namespace vcml {
-namespace silkit {
+namespace Services {
+namespace Ethernet {
 
-class service : public module
-{
-protected:
-    string m_type;
+class IEthernetController;
 
-public:
-    logger& log;
+} // namespace Ethernet
 
-    const char* type() const { return m_type.c_str(); }
+namespace Orchestration {
 
-    service(const sc_module_name& nm, participant& part);
-    virtual ~service();
+class ILifecycleService;
 
-    service() = delete;
-    service(const service&) = delete;
-};
-
-} // namespace silkit
-} // namespace vcml
+} // namespace Orchestration
+} // namespace Services
+} // namespace SilKit
 
 #endif

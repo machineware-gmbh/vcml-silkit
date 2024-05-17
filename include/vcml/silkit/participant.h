@@ -18,18 +18,7 @@
 
 #include "vcml/properties/property.h"
 
-namespace SilKit {
-
-class IParticipant;
-
-namespace Services {
-namespace Orchestration {
-
-class ILifecycleService;
-
-} // namespace Orchestration
-} // namespace Services
-} // namespace SilKit
+#include "silkit.h"
 
 namespace vcml {
 namespace silkit {
