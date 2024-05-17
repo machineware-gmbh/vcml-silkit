@@ -8,17 +8,35 @@
  *                                                                            *
  ******************************************************************************/
 
-#include "vcml/models/silkit/service.h"
+#ifndef VCML_SILKIT_SERVICE_H
+#define VCML_SILKIT_SERVICE_H
+
+#include "vcml/core/types.h"
+#include "vcml/logging/logger.h"
+
+#include "participant.h"
 
 namespace vcml {
 namespace silkit {
 
-service::service(participant& part, const sc_module_name& nm):
-    module(nm), m_type("unknown"), log(part.log) {
-}
+class service : public module
+{
+protected:
+    string m_type;
 
-service::~service() {
-}
+public:
+    logger& log;
+
+    const char* type() const { return m_type.c_str(); }
+
+    service(const sc_module_name& nm, participant& part);
+    virtual ~service();
+
+    service() = delete;
+    service(const service&) = delete;
+};
 
 } // namespace silkit
 } // namespace vcml
+
+#endif

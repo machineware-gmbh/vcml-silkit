@@ -19,12 +19,9 @@
 #include "vcml/properties/property.h"
 #include "vcml/protocols/eth.h"
 
-#include "vcml/models/silkit/participant.h"
-#include "vcml/models/silkit/service.h"
-
-#include "silkit/services/all.hpp"
-#include "silkit/services/orchestration/all.hpp"
-#include "silkit/services/orchestration/string_utils.hpp"
+#include "participant.h"
+#include "service.h"
+#include "silkit.h"
 
 namespace vcml {
 namespace silkit {
@@ -47,7 +44,7 @@ public:
     eth_initiator_socket eth_tx;
     eth_target_socket eth_rx;
 
-    service_eth(participant& part, const sc_module_name& nm);
+    service_eth(const sc_module_name& nm, participant& part);
     virtual ~service_eth();
 
     void send_to_host(const eth_frame& frame);

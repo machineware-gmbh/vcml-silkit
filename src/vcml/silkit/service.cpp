@@ -8,10 +8,17 @@
  *                                                                            *
  ******************************************************************************/
 
-#ifndef VCML_SILKIT_H
-#define VCML_SILKIT_H
+#include "vcml/silkit/service.h"
 
-#include "vcml/silkit/participant.h"
-#include "vcml/silkit/service_eth.h"
+namespace vcml {
+namespace silkit {
 
-#endif
+service::service(const sc_module_name& nm, participant& part):
+    module(nm), m_type("unknown"), log(part.log) {
+}
+
+service::~service() {
+}
+
+} // namespace silkit
+} // namespace vcml
