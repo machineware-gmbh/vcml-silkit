@@ -8,7 +8,7 @@
  *                                                                            *
  ******************************************************************************/
 
-#include "vcml/models/silkit/participant.h"
+#include "vcml/silkit/participant.h"
 
 #include "silkit/SilKit.hpp"
 #include "silkit/SilKitVersion.hpp"

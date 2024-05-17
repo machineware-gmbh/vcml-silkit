@@ -14,7 +14,7 @@
 #include "vcml/core/types.h"
 #include "vcml/logging/logger.h"
 
-#include "vcml/models/silkit/participant.h"
+#include "participant.h"
 
 namespace vcml {
 namespace silkit {

@@ -8,7 +8,7 @@
  *                                                                            *
  ******************************************************************************/
 
-#include "vcml/models/silkit/service.h"
+#include "vcml/silkit/service.h"
 
 namespace vcml {
 namespace silkit {

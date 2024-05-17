@@ -19,8 +19,8 @@
 #include "vcml/properties/property.h"
 #include "vcml/protocols/eth.h"
 
-#include "vcml/models/silkit/participant.h"
-#include "vcml/models/silkit/service.h"
+#include "participant.h"
+#include "service.h"
 
 namespace SilKit {
 namespace Services {

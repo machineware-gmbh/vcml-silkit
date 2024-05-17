@@ -11,7 +11,7 @@
 #include "silkit/SilKit.hpp"
 #include "silkit/services/all.hpp"
 
-#include "vcml/models/silkit/service_eth.h"
+#include "vcml/silkit/service_eth.h"
 
 using namespace SilKit::Services::Ethernet;
 

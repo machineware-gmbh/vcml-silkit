@@ -17,10 +17,10 @@ find_package(Git REQUIRED)
 
 set(VCML_SILKIT_TESTS OFF CACHE BOOL "Build unit tests")
 
-set(SILKIT_BUILD_TESTS OFF CACHE BOOL "")
-set(SILKIT_BUILD_DEMOS OFF CACHE BOOL "")
-set(SILKIT_BUILD_UTILITIES OFF CACHE BOOL "")
-set(SILKIT_BUILD_STATIC ON CACHE BOOL "")
+option(SILKIT_BUILD_TESTS "" OFF)
+option(SILKIT_BUILD_DEMOS "" OFF)
+option(SILKIT_BUILD_UTILITIES "" OFF)
+set(SILKIT_BUILD_STATIC ON CACHE BOOL "" FORCE)
 # ToDo: Fix errorneos error msg "Could NOT find SILKIT..."
 find_github_repo(SilKit "vectorgrp/sil-kit" "sil-kit/v4.0.48")
 if(NOT TARGET SilKit)
@@ -33,9 +33,9 @@ set(src ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(inc ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 add_library(vcml-silkit STATIC
-            ${src}/vcml/models/silkit/participant.cpp
-            ${src}/vcml/models/silkit/service.cpp
-            ${src}/vcml/models/silkit/service_eth.cpp)
+            ${src}/vcml/silkit/participant.cpp
+            ${src}/vcml/silkit/service.cpp
+            ${src}/vcml/silkit/service_eth.cpp)
 
 target_compile_options(vcml-silkit PRIVATE -Wall -Werror)
 target_compile_definitions(vcml-silkit PRIVATE cxx_std_17)
