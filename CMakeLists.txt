@@ -19,13 +19,13 @@ set(VCML_SILKIT_TESTS OFF CACHE BOOL "Build unit tests")
 
 option(SILKIT_BUILD_TESTS "" OFF)
 option(SILKIT_BUILD_DEMOS "" OFF)
+set(SILKIT_BUILD_STATIC ON)
 # ToDo: Fix errorneos error msg "Could NOT find SILKIT..."
 find_github_repo(SilKit "vectorgrp/sil-kit" "sil-kit/v4.0.48")
 if(NOT TARGET SilKit)
     message(FATAL_ERROR "SilKit not found!")
 endif()
 
-set(SILKIT_BUILD_STATIC ON)
 find_github_repo(vcml "machineware-gmbh/vcml")
 
 set(src ${CMAKE_CURRENT_SOURCE_DIR}/src)
