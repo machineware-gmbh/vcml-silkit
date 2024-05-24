@@ -23,8 +23,22 @@ participant::participant(const sc_module_name& nm):
     cfg_path("cfg_path", "") {
     log_info("SilKit Version: %s", SilKit::Version::String());
 
-    auto participant_cfg = SilKit::Config::ParticipantConfigurationFromFile(
-        cfg_path);
+    const std::string cfg = R"(
+    Description: My participant configuration
+    Logging:
+        Sinks:
+        - Type: Stdout
+          Level: Off)";
+
+    std::shared_ptr<SilKit::Config::IParticipantConfiguration> participant_cfg;
+    if (cfg_path == "") {
+        participant_cfg = SilKit::Config::ParticipantConfigurationFromString(
+            cfg);
+    } else {
+        participant_cfg = SilKit::Config::ParticipantConfigurationFromFile(
+            cfg_path);
+    }
+
     auto sp = SilKit::CreateParticipant(participant_cfg, name, registry_uri);
     m_silkit_part = sp.release();
 
