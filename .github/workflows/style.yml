@@ -23,4 +23,3 @@ jobs:
 
     - name: Check Format
       run: ./utils/format -n
-
