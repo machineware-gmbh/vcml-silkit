@@ -11,7 +11,10 @@
 cmake_minimum_required(VERSION 3.11)
 project(vcml-silkit VERSION 2024.04.29 LANGUAGES C CXX)
 
-include(cmake/common.cmake)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+include(FindGithubRepo)
+include(GenVersionInfo)
+include(Sanitizer)
 
 find_package(Git REQUIRED)
 
