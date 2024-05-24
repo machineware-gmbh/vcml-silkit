@@ -18,3 +18,6 @@ race:sc_core::sc_prim_channel_registry::async_update_list::append
 # fibers are considered as individual threads, and we call suspend() from the
 # main thread, but sometimes also from vcml processor SC_THREADS
 mutex:vcml::thctl::suspend
+
+# deleting a participant before lifecycleservice gets deleted generates a data race
+race:SilKit::_detail_v1::Impl::Services::Orchestration::LifecycleService::~LifecycleService
