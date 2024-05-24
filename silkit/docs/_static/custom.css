@@ -1,0 +1,30 @@
+/*
+ * SPDX-FileCopyrightText: 2023 Vector Informatik GmbH
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+/* custom styling adaption to fix word wrap in read the docs template */
+.wy-table-responsive table td, .wy-table-responsive table th {
+    white-space: inherit !important;
+}
+
+.wy-nav-content {
+    max-width: 1240px;
+}
+
+.rst-content code.literal {
+	position: relative;
+	top: -0.08rem;
+	color: #545454;
+	font-weight: 600;
+	background: none;
+}
+
+.rst-content code.xref {
+	position: relative;
+	top: -0.08rem;
+	color: #062873;
+	font-weight: 700;
+	background: none;
+}

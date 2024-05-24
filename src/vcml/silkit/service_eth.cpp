@@ -60,12 +60,12 @@ service_eth::service_eth(const sc_module_name& nm, participant& part):
     m_eth_controller = part.get_silkit_part()->CreateEthernetController(
         controller_name, network_name);
 
-    IEthernetController::FrameHandler frameHandler =
+    IEthernetController::FrameHandler frame_handler =
         [this](IEthernetController*, const EthernetFrameEvent& msg) {
             send_to_guest(SilKit::Util::ToStdVector(msg.frame.raw));
         };
 
-    m_eth_controller->AddFrameHandler(frameHandler);
+    m_eth_controller->AddFrameHandler(frame_handler);
     m_eth_controller->Activate();
 }
 
