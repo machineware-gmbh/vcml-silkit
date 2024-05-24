@@ -15,18 +15,21 @@ include(cmake/common.cmake)
 
 find_package(Git REQUIRED)
 
-set(VCML_SILKIT_TESTS OFF CACHE BOOL "Build unit tests")
+option(VCML_SILKIT_TESTS "Build unit tests" OFF)
+option(VCML_SILKIT_COVERAGE "Generate coverage data" OFF)
+set(VCML_SILKIT_LINTER "" CACHE STRING "Code linter to use")
 
 option(SILKIT_BUILD_TESTS "" OFF)
 option(SILKIT_BUILD_DEMOS "" OFF)
-option(SILKIT_BUILD_UTILITIES "" OFF)
+option(SILKIT_BUILD_UTILITIES "" ON)
 set(SILKIT_PACKAGE_SYMBOLS OFF CACHE BOOL "" FORCE)
 set(SILKIT_BUILD_STATIC ON CACHE BOOL "" FORCE)
-# ToDo: Fix errorneos error msg "Could NOT find SILKIT..."
-find_github_repo(SilKit "vectorgrp/sil-kit" "sil-kit/v4.0.48")
-if(NOT TARGET SilKit)
-    message(FATAL_ERROR "SilKit not found!")
+if(VCML_SILKIT_TESTS)
+    add_subdirectory(sil-kit)
+else()
+    add_subdirectory(sil-kit EXCLUDE_FROM_ALL)
 endif()
+get_target_property(SILKIT_INCLUDE_DIR SilKitInterface INTERFACE_INCLUDE_DIRECTORIES)
 
 find_github_repo(vcml "machineware-gmbh/vcml")
 
@@ -38,18 +41,24 @@ add_library(vcml-silkit STATIC
             ${src}/vcml/silkit/service.cpp
             ${src}/vcml/silkit/service_eth.cpp)
 
-target_compile_options(vcml-silkit PRIVATE -Wall -Werror)
+target_compile_options(vcml-silkit PRIVATE ${MWR_COMPILER_WARN_FLAGS})
 target_compile_definitions(vcml-silkit PRIVATE cxx_std_17)
 
 target_include_directories(vcml-silkit PUBLIC ${inc})
 target_include_directories(vcml-silkit PRIVATE ${src})
-target_include_directories(vcml-silkit PRIVATE SilKit)
+target_include_directories(vcml-silkit SYSTEM PRIVATE ${SILKIT_INCLUDE_DIR})
 
 target_link_libraries(vcml-silkit PUBLIC mwr)
 target_link_libraries(vcml-silkit PUBLIC vcml)
-target_link_libraries(vcml-silkit PUBLIC SilKit)
+target_link_libraries(vcml-silkit PRIVATE SilKit)
 
 set_target_properties(vcml-silkit PROPERTIES DEBUG_POSTFIX "d")
+set_target_properties(vcml-silkit PROPERTIES CXX_CLANG_TIDY "${VCML_SILKIT_LINTER}")
+
+if(VCML_SILKIT_COVERAGE)
+    target_compile_options(vcml-silkit PUBLIC --coverage)
+    target_link_libraries(vcml-silkit PUBLIC -lgcov)
+endif()
 
 if(VCML_SILKIT_TESTS)
     enable_testing()
