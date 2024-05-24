@@ -41,6 +41,7 @@ for type in $builds; do (
           -DCMAKE_BUILD_TYPE=$type           \
           -DCMAKE_INSTALL_PREFIX=$prefix     \
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+          -DVCML_SILKIT_LINTER=$linter       \
           $home
 
     cmake --build $build -j $(nproc) -- install
