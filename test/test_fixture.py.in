@@ -14,20 +14,23 @@ import subprocess
 import sys
 import os
 import re
-import time
+from pexpect.popen_spawn import PopenSpawn
 
-registry = subprocess.Popen(['$<TARGET_FILE:sil-kit-registry>', "-s"])
-
+log = sys.stdout
 env = os.environ
+
 for var in [v for v in re.split(r'(?<!\\);', '@env@') if v]:
     val = var.split('=', 1)
     env[val[0].strip()] = val[1].strip() if len(val) > 1 else ''
 for var, val in env.items():
     print(f'{var} = {val}')
 
-time.sleep(5)
+p = PopenSpawn(['$<TARGET_FILE:sil-kit-registry>', "-s"], env=env, logfile=log, timeout=None, encoding='utf-8')
+
+p.expect('SIL Kit Registry listening on silkit://localhost:8500')
 
 result = subprocess.run([sys.argv[1], '@CMAKE_CURRENT_SOURCE_DIR@'], env=env)
 
-registry.terminate()
+p.kill(15)
+p.wait()
 sys.exit(result.returncode)
