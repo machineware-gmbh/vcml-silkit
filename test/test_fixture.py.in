@@ -25,11 +25,13 @@ for var in [v for v in re.split(r'(?<!\\);', '@env@') if v]:
 for var, val in env.items():
     print(f'{var} = {val}')
 
-p = PopenSpawn(['$<TARGET_FILE:sil-kit-registry>', "-s"], env=env, logfile=log, timeout=None, encoding='utf-8')
+cmd = ['$<TARGET_FILE:sil-kit-registry>', "-s"]
+p = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
 
 p.expect('SIL Kit Registry listening on silkit://localhost:8500')
 
-result = subprocess.run([sys.argv[1], '@CMAKE_CURRENT_SOURCE_DIR@'], env=env)
+cmd = [sys.argv[1], '@CMAKE_CURRENT_SOURCE_DIR@']
+result = subprocess.run(cmd, env=env)
 
 p.kill(15)
 p.wait()
