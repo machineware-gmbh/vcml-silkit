@@ -14,6 +14,7 @@ import subprocess
 import sys
 import os
 import re
+import time
 
 registry = subprocess.Popen(['$<TARGET_FILE:sil-kit-registry>', "-s"])
 
@@ -23,6 +24,8 @@ for var in [v for v in re.split(r'(?<!\\);', '@env@') if v]:
     env[val[0].strip()] = val[1].strip() if len(val) > 1 else ''
 for var, val in env.items():
     print(f'{var} = {val}')
+
+time.sleep(5)
 
 result = subprocess.run([sys.argv[1], '@CMAKE_CURRENT_SOURCE_DIR@'], env=env)
 
