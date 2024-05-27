@@ -33,6 +33,7 @@ public:
     property<string> registry_uri;
     property<string> name;
     property<string> cfg_path;
+    property<bool> coordinated;
 
     virtual SilKit::IParticipant* get_silkit_part() { return m_silkit_part; }
 

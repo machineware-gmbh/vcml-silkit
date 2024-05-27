@@ -16,11 +16,14 @@
 namespace vcml {
 namespace silkit {
 
+using namespace SilKit::Services::Orchestration;
+
 participant::participant(const sc_module_name& nm):
     module(nm),
     registry_uri("registry_uri", "silkit://localhost:8500"),
     name("name", "vcml_participant"),
-    cfg_path("cfg_path", "") {
+    cfg_path("cfg_path", ""),
+    coordinated("coordinated", false) {
     log_info("SilKit Version: %s", SilKit::Version::String());
 
     const std::string cfg = R"(
@@ -42,8 +45,10 @@ participant::participant(const sc_module_name& nm):
     auto sp = SilKit::CreateParticipant(participant_cfg, name, registry_uri);
     m_silkit_part = sp.release();
 
-    m_lifecycle = m_silkit_part->CreateLifecycleService(
-        { SilKit::Services::Orchestration::OperationMode::Coordinated });
+    OperationMode mode = coordinated ? OperationMode::Coordinated
+                                     : OperationMode::Autonomous;
+    m_lifecycle = m_silkit_part->CreateLifecycleService({ mode });
+
     m_lifecycle->SetShutdownHandler([this]() {
         log_info("Shutdown requested");
         request_stop();
@@ -53,6 +58,9 @@ participant::participant(const sc_module_name& nm):
 }
 
 participant::~participant() {
+    if (m_lifecycle->State() == ParticipantState::Running)
+        m_lifecycle->Stop("User requested");
+
     if (m_silkit_part)
         delete m_silkit_part;
 }
