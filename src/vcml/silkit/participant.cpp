@@ -108,11 +108,12 @@ participant::participant(const sc_module_name& nm):
 void participant::end_of_elaboration() {
     std::unique_lock lock(m_mtx);
     m_cond_start.wait(lock, [this] { return m_start; });
+    while (m_lifecycle->State() != ParticipantState::Running);
 }
 
 participant::~participant() {
     auto state = m_lifecycle->State();
-    if (state == ParticipantState::Running)
+    if (state == ParticipantState::Running || state == ParticipantState::Paused)
         m_lifecycle->Stop("User requested");
     else if (state != ParticipantState::Shutdown) {
         m_lifecycle->ReportError(
