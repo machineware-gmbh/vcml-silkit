@@ -52,7 +52,6 @@ using namespace SilKit::Services::Orchestration;
 participant::participant(const sc_module_name& nm):
     module(nm),
     m_mtx(),
-    m_start(false),
     m_cond_start(),
     registry_uri("registry_uri", "silkit://localhost:8500"),
     name("name", "vcml_participant"),
@@ -97,7 +96,6 @@ participant::participant(const sc_module_name& nm):
     m_lifecycle->SetStartingHandler([this]() {
         log_info("Start simulation");
         std::unique_lock lock(m_mtx);
-        m_start = true;
         lock.unlock();
         m_cond_start.notify_one();
     });
@@ -107,10 +105,9 @@ participant::participant(const sc_module_name& nm):
 
 void participant::end_of_elaboration() {
     std::unique_lock lock(m_mtx);
-    m_cond_start.wait(lock, [this] { return m_start; });
-    while (m_lifecycle->State() != ParticipantState::Running) {
-        // nothing to do
-    }
+    m_cond_start.wait(lock, [this] {
+        return m_lifecycle->State() != ParticipantState::Running;
+    });
 }
 
 participant::~participant() {
