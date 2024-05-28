@@ -49,13 +49,15 @@ public:
     property<string> cfg_path;
     property<silkit_mode> mode;
 
-    virtual SilKit::IParticipant* get_silkit_part() { return m_silkit_part; }
+    virtual SilKit::IParticipant* silkit_part() { return m_silkit_part; }
 
     virtual void end_of_elaboration() override;
 
     participant(const sc_module_name& nm);
     virtual ~participant();
     VCML_KIND(silkit::participant);
+
+    virtual const char* version() const override;
 };
 
 } // namespace silkit

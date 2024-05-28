@@ -9,15 +9,21 @@
  ******************************************************************************/
 
 #include "vcml/silkit/service.h"
+#include "vcml/silkit/version.h"
 
 namespace vcml {
 namespace silkit {
 
-service::service(const sc_module_name& nm, participant& part):
-    module(nm), m_type("unknown"), log(part.log) {
+service::service(const sc_module_name& nm, participant& part,
+                 const char* type):
+    module(nm), m_type(type), m_part(part), log(part.log) {
 }
 
 service::~service() {
+}
+
+const char* service::version() const {
+    return VCML_SILKIT_VERSION_STRING;
 }
 
 } // namespace silkit

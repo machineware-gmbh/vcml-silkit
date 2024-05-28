@@ -12,6 +12,8 @@
 #define VCML_SILKIT_H
 
 #include "vcml/silkit/participant.h"
+#include "vcml/silkit/service.h"
 #include "vcml/silkit/service_eth.h"
+#include "vcml/silkit/version.h"
 
 #endif

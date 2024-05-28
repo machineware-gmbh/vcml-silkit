@@ -9,6 +9,7 @@
  ******************************************************************************/
 
 #include "vcml/silkit/participant.h"
+#include "vcml/silkit/version.h"
 
 #include "silkit/SilKit.hpp"
 #include "silkit/SilKitVersion.hpp"
@@ -61,7 +62,13 @@ participant::participant(const sc_module_name& nm):
 
     if (mode == SILKIT_MODE_UNKNOWN || mode == SILKIT_MODE_TIME_SYNC)
         VCML_ERROR("silkit mode %s not implementd", to_string(mode).c_str());
+}
 
+const char* participant::version() const {
+    return VCML_SILKIT_VERSION_STRING;
+}
+
+void participant::end_of_elaboration() {
     const std::string cfg = R"(
     Description: My participant configuration
     Logging:
@@ -102,9 +109,7 @@ participant::participant(const sc_module_name& nm):
     });
 
     m_lifecycle->StartLifecycle();
-}
 
-void participant::end_of_elaboration() {
     std::unique_lock lock(m_mtx);
     m_cond_start.wait(lock, [this] { return m_start; });
 
@@ -116,14 +121,17 @@ void participant::end_of_elaboration() {
 }
 
 participant::~participant() {
-    auto state = m_lifecycle->State();
-    if (state == ParticipantState::Running ||
-        state == ParticipantState::Paused)
-        m_lifecycle->Stop("User requested");
-    else if (state != ParticipantState::Shutdown) {
-        m_lifecycle->ReportError(
-            "end of simulation while not running and not shutdown");
-        VCML_ERROR("end of simulation while not running and not shutdown");
+    if (m_lifecycle) {
+        auto state = m_lifecycle->State();
+        if (state == ParticipantState::Running ||
+            state == ParticipantState::Paused)
+            m_lifecycle->Stop("User requested");
+        else if (state != ParticipantState::Shutdown) {
+            const char*
+                msg = "end of simulation while not running and not shutdown";
+            m_lifecycle->ReportError(msg);
+            VCML_ERROR("%s", msg);
+        }
     }
 
     if (m_silkit_part)

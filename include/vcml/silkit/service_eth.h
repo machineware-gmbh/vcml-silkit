@@ -44,8 +44,13 @@ public:
     eth_initiator_socket eth_tx;
     eth_target_socket eth_rx;
 
+    virtual void start_of_simulation() override;
+
     service_eth(const sc_module_name& nm, participant& part);
     virtual ~service_eth();
+    VCML_KIND(service_eth);
+
+    virtual const char* version() const override;
 
     void send_to_host(const eth_frame& frame);
     void send_to_guest(eth_frame frame);
