@@ -21,6 +21,19 @@
 #include "silkit.h"
 
 namespace vcml {
+
+typedef enum silkit_mode {
+    SILKIT_MODE_AUTONOMOUS = 0,
+    SILKIT_MODE_COORDINATED,
+    SILKIT_MODE_TIME_SYNC,
+    SILKIT_MODE_UNKNOWN,
+} silkit_mode;
+
+VCML_TYPEINFO(silkit_mode);
+
+istream& operator>>(istream& is, silkit_mode& m);
+ostream& operator<<(ostream& os, silkit_mode m);
+
 namespace silkit {
 
 class participant : public module
@@ -29,12 +42,19 @@ private:
     SilKit::Services::Orchestration::ILifecycleService* m_lifecycle;
     SilKit::IParticipant* m_silkit_part;
 
+    mutex m_mtx;
+    bool m_start;
+    condition_variable m_cond_start;
+
 public:
     property<string> registry_uri;
     property<string> name;
     property<string> cfg_path;
+    property<silkit_mode> mode;
 
     virtual SilKit::IParticipant* get_silkit_part() { return m_silkit_part; }
+
+    virtual void end_of_elaboration() override;
 
     participant(const sc_module_name& nm);
     virtual ~participant();

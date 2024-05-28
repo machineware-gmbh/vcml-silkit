@@ -25,14 +25,20 @@ for var in [v for v in re.split(r'(?<!\\);', '@env@') if v]:
 for var, val in env.items():
     print(f'{var} = {val}')
 
-cmd = ['$<TARGET_FILE:sil-kit-registry>', "-s"]
-p = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
+cmd = ['$<TARGET_FILE:sil-kit-registry>', '-s']
+pr = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
+pr.expect('SIL Kit Registry listening on silkit://localhost:8500')
 
-p.expect('SIL Kit Registry listening on silkit://localhost:8500')
+cmd = ['$<TARGET_FILE:sil-kit-system-controller>', '--non-interactive', 'vcml_participant']
+pc = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
+pc.expect('Creating participant \'SystemController\' with registry silkit://localhost:8500')
+
 
 cmd = [sys.argv[1], '@CMAKE_CURRENT_SOURCE_DIR@']
 result = subprocess.run(cmd, env=env)
 
-p.kill(15)
-p.wait()
+pc.kill(15)
+pc.wait()
+pr.kill(15)
+pr.wait()
 sys.exit(result.returncode)
