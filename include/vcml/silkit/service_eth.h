@@ -48,7 +48,7 @@ public:
 
     service_eth(const sc_module_name& nm, participant& part);
     virtual ~service_eth();
-    VCML_KIND(service_eth);
+    VCML_KIND(silkit::service_eth);
 
     virtual const char* version() const override;
 

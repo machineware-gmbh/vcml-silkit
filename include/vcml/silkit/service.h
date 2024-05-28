@@ -37,7 +37,7 @@ public:
 
     service() = delete;
     service(const service&) = delete;
-    VCML_KIND(service);
+    VCML_KIND(silkit::service);
 
     virtual const char* version() const override;
 };

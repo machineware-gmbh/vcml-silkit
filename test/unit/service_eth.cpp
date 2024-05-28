@@ -46,6 +46,8 @@ public:
 
         SC_HAS_PROCESS(test_bench);
         SC_THREAD(tick);
+
+        EXPECT_STREQ(service0.kind(), "vcml::silkit::service_eth");
     }
 
     MOCK_METHOD(void, eth_receive,
