@@ -36,6 +36,7 @@ endif()
 
 macro(model_test nm)
     add_executable(${nm} ${nm}.cpp testing.cpp)
+    add_dependencies(${nm} sil-kit-registry sil-kit-system-controller)
     target_link_libraries(${nm} SilKit vcml-silkit gtest gmock)
     target_compile_options(${nm} PRIVATE ${MWR_COMPILER_WARN_FLAGS})
     set_target_properties(${nm} PROPERTIES CXX_CLANG_TIDY "${VCML_ARM_LINTER}")

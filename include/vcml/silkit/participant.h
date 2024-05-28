@@ -43,6 +43,7 @@ private:
     SilKit::IParticipant* m_silkit_part;
 
     mutex m_mtx;
+    bool m_start = true;
     condition_variable m_cond_start;
 
 public:
