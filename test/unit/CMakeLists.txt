@@ -8,7 +8,7 @@
  #                                                                            #
  ##############################################################################
 
-function(unit_test nm part)
+function(unit_test nm mode)
     set(script ${CMAKE_CURRENT_BINARY_DIR}/${nm})
     if(CMAKE_CONFIGURATION_TYPES)
         configure_file(fixture.py.in ${script}.py.in)
@@ -33,4 +33,5 @@ function(unit_test nm part)
     set_tests_properties(${nm} PROPERTIES TIMEOUT 60)
 endfunction()
 
-unit_test(participant vcml_participant)
+unit_test(participant coordinated vcml_participant)
+unit_test(service_eth autonomous vcml_participant0 vcml_participant1)

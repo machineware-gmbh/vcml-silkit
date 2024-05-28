@@ -8,24 +8,21 @@
  *                                                                            *
  ******************************************************************************/
 
-#include "testing.h"
+#ifndef VCML_SILKIT_VERSION_H
+#define VCML_SILKIT_VERSION_H
 
-class test_bench : public test_base
-{
-public:
-    vcml::silkit::participant participant;
+#define VCML_SILKIT_VERSION_MAJOR    @PROJECT_VERSION_MAJOR@
+#define VCML_SILKIT_VERSION_MINOR    @PROJECT_VERSION_MINOR@
+#define VCML_SILKIT_VERSION_PATCH    @PROJECT_VERSION_PATCH@
 
-    test_bench(const sc_module_name& nm):
-        test_base(nm), participant("participant") {
-        EXPECT_STREQ(participant.kind(), "vcml::silkit::participant");
-    }
+#define VCML_SILKIT_GIT_REV          "@VCML_SILKIT_GIT_REV@"
+#define VCML_SILKIT_GIT_REV_SHORT    "@VCML_SILKIT_GIT_REV_SHORT@"
 
-    virtual void run_test() override {
-        // nothing to do
-    }
-};
+#define VCML_SILKIT_VERSION          @VCML_SILKIT_VERSION_INT@
+#define VCML_SILKIT_VERSION_STRING   "@VCML_SILKIT_VERSION_STRING@"
 
-TEST(participant, simulate) {
-    test_bench bench("system");
-    sc_core::sc_start();
-}
+#include <mwr.h>
+
+MWR_DECLARE_MODULE_COPYRIGHT(VCML_SILKIT, "vcml-silkit", 2024)
+
+#endif

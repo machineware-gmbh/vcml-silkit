@@ -8,15 +8,16 @@
  *                                                                            *
  ******************************************************************************/
 
+#include "vcml/silkit/service_eth.h"
+#include "vcml/silkit/version.h"
+
 #include "silkit/SilKit.hpp"
 #include "silkit/services/all.hpp"
 
-#include "vcml/silkit/service_eth.h"
-
-using namespace SilKit::Services::Ethernet;
-
 namespace vcml {
 namespace silkit {
+
+using namespace SilKit::Services::Ethernet;
 
 void service_eth::send_to_host(const eth_frame& frame) {
     m_eth_controller->SendFrame(EthernetFrame{ SilKit::Util::ToSpan(frame) });
@@ -46,8 +47,9 @@ void service_eth::eth_transmit() {
 }
 
 service_eth::service_eth(const sc_module_name& nm, participant& part):
-    service(nm, part),
+    service(nm, part, "service_eth"),
     eth_host(),
+    m_eth_controller(),
     m_mtx(),
     m_rx(),
     m_ev("rxev"),
@@ -57,8 +59,12 @@ service_eth::service_eth(const sc_module_name& nm, participant& part):
     eth_rx("eth_rx") {
     SC_HAS_PROCESS(service_eth);
     SC_THREAD(eth_transmit);
-    m_eth_controller = part.get_silkit_part()->CreateEthernetController(
+}
+
+void service_eth::start_of_simulation() {
+    m_eth_controller = part().silkit_part()->CreateEthernetController(
         controller_name, network_name);
+    VCML_ERROR_ON(!m_eth_controller, "no silkit ethernet controller created");
 
     IEthernetController::FrameHandler frame_handler =
         [this](IEthernetController*, const EthernetFrameEvent& msg) {
@@ -70,7 +76,12 @@ service_eth::service_eth(const sc_module_name& nm, participant& part):
 }
 
 service_eth::~service_eth() {
-    m_eth_controller->Deactivate();
+    if (m_eth_controller)
+        m_eth_controller->Deactivate();
+}
+
+const char* service_eth::version() const {
+    return VCML_SILKIT_VERSION_STRING;
 }
 
 } // namespace silkit

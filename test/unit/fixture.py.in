@@ -29,16 +29,27 @@ cmd = ['$<TARGET_FILE:sil-kit-registry>', '-s']
 pr = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
 pr.expect('SIL Kit Registry listening on silkit://localhost:8500')
 
-cmd = ['$<TARGET_FILE:sil-kit-system-controller>', '--non-interactive', '@part@']
-pc = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
-pc.expect('Creating participant \'SystemController\' with registry silkit://localhost:8500')
+if '@mode@' != 'autonomous':
+    cmd = ['$<TARGET_FILE:sil-kit-system-controller>', '--non-interactive', '@ARGN@']
+    pc = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
+    pc.expect('Creating participant \'SystemController\' with registry silkit://localhost:8500')
 
+cmd = ['$<TARGET_FILE:@nm@>']
+i = 0
+for var in '@ARGN@'.split(';'):
+    cmd.extend(['-c', f'system.participant{i}.mode=@mode@'])
+    cmd.extend(['-c', f'system.participant{i}.name={var}'])
+    i += 1
+cmd.append('@CMAKE_CURRENT_SOURCE_DIR@')
+print(cmd)
 
-cmd = ['$<TARGET_FILE:@nm@>', '-c', 'system.participant.name=@part@', '@CMAKE_CURRENT_SOURCE_DIR@']
 result = subprocess.run(cmd, env=env)
 
-pc.kill(15)
-pc.wait()
+if '@mode@' != 'autonomous':
+    pc.kill(15)
+    pc.wait()
+
 pr.kill(15)
 pr.wait()
+
 sys.exit(result.returncode)

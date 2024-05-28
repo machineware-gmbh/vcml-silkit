@@ -34,6 +34,11 @@ find_github_repo(vcml "machineware-gmbh/vcml")
 
 set(src ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(inc ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(gen ${CMAKE_CURRENT_BINARY_DIR}/gen)
+
+
+configure_file(${src}/vcml/silkit/version.h.in
+               ${gen}/vcml/silkit/version.h @ONLY)
 
 add_library(vcml-silkit STATIC
             ${src}/vcml/silkit/participant.cpp
@@ -45,6 +50,7 @@ target_compile_definitions(vcml-silkit PRIVATE cxx_std_17)
 
 target_include_directories(vcml-silkit PUBLIC ${inc})
 target_include_directories(vcml-silkit PRIVATE ${src})
+target_include_directories(vcml-silkit PUBLIC ${gen})
 target_include_directories(vcml-silkit SYSTEM PRIVATE ${SILKIT_INCLUDE_DIR})
 
 target_link_libraries(vcml-silkit PUBLIC mwr)

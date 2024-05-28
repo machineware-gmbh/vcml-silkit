@@ -23,17 +23,23 @@ class service : public module
 {
 protected:
     string m_type;
+    participant& m_part;
 
 public:
     logger& log;
 
     const char* type() const { return m_type.c_str(); }
 
-    service(const sc_module_name& nm, participant& part);
+    participant& part() { return m_part; }
+
+    service(const sc_module_name& nm, participant& part, const char* type);
     virtual ~service();
 
     service() = delete;
     service(const service&) = delete;
+    VCML_KIND(silkit::service);
+
+    virtual const char* version() const override;
 };
 
 } // namespace silkit
