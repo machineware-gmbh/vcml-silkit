@@ -35,7 +35,7 @@ private:
     queue<eth_frame> m_rx;
     sc_event m_ev;
 
-    void eth_receive(const eth_frame& frame);
+    void eth_receive(const eth_frame& frame) override;
     void eth_transmit();
 
 public:
