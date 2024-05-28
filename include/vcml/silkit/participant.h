@@ -21,20 +21,17 @@
 #include "silkit.h"
 
 namespace vcml {
+namespace silkit {
 
-typedef enum silkit_mode {
+enum silkit_mode {
     SILKIT_MODE_AUTONOMOUS = 0,
     SILKIT_MODE_COORDINATED,
     SILKIT_MODE_TIME_SYNC,
     SILKIT_MODE_UNKNOWN,
-} silkit_mode;
-
-VCML_TYPEINFO(silkit_mode);
+};
 
 istream& operator>>(istream& is, silkit_mode& m);
 ostream& operator<<(ostream& os, silkit_mode m);
-
-namespace silkit {
 
 class participant : public module
 {
@@ -42,8 +39,8 @@ private:
     SilKit::Services::Orchestration::ILifecycleService* m_lifecycle;
     SilKit::IParticipant* m_silkit_part;
 
-    mutex m_mtx;
-    bool m_start = true;
+    mutable mutex m_mtx;
+    bool m_start;
     condition_variable m_cond_start;
 
 public:
@@ -62,6 +59,9 @@ public:
 };
 
 } // namespace silkit
+
+VCML_TYPEINFO(silkit::silkit_mode);
+
 } // namespace vcml
 
 #endif

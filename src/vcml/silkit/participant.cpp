@@ -14,6 +14,7 @@
 #include "silkit/SilKitVersion.hpp"
 
 namespace vcml {
+namespace silkit {
 
 istream& operator>>(istream& is, silkit_mode& m) {
     std::string str;
@@ -44,8 +45,6 @@ ostream& operator<<(ostream& os, silkit_mode m) {
         return os << "unknown";
     }
 }
-
-namespace silkit {
 
 using namespace SilKit::Services::Orchestration;
 
