@@ -13,9 +13,10 @@
 class test_bench : public test_base
 {
 public:
-    vcml::silkit::participant model;
+    vcml::silkit::participant participant;
 
-    test_bench(const sc_module_name& nm): test_base(nm), model("model") {
+    test_bench(const sc_module_name& nm):
+        test_base(nm), participant("participant") {
         // nothing to do
     }
 
