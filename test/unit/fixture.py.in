@@ -29,12 +29,12 @@ cmd = ['$<TARGET_FILE:sil-kit-registry>', '-s']
 pr = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
 pr.expect('SIL Kit Registry listening on silkit://localhost:8500')
 
-cmd = ['$<TARGET_FILE:sil-kit-system-controller>', '--non-interactive', 'vcml_participant']
+cmd = ['$<TARGET_FILE:sil-kit-system-controller>', '--non-interactive', '@part@']
 pc = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
 pc.expect('Creating participant \'SystemController\' with registry silkit://localhost:8500')
 
 
-cmd = [sys.argv[1], '@CMAKE_CURRENT_SOURCE_DIR@']
+cmd = ['$<TARGET_FILE:@nm@>', '-c', 'system.participant.name=@part@', '@CMAKE_CURRENT_SOURCE_DIR@']
 result = subprocess.run(cmd, env=env)
 
 pc.kill(15)

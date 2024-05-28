@@ -23,7 +23,7 @@ test_base::test_base(const sc_module_name& nm):
 }
 
 test_base::~test_base() {
-    finalize_test();
+    test_base::finalize_test();
 }
 
 void test_base::run() {
