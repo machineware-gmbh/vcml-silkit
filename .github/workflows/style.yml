@@ -22,4 +22,4 @@ jobs:
         token: ${{secrets.CI_TOKEN}}
 
     - name: Check Format
-      run: ./utils/format -n
+      run: ./utils/format.py -n
