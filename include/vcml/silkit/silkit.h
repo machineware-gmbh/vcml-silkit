@@ -25,6 +25,7 @@ class IEthernetController;
 namespace Orchestration {
 
 class ILifecycleService;
+class ITimeSyncService;
 
 } // namespace Orchestration
 } // namespace Services

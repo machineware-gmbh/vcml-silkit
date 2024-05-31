@@ -16,13 +16,11 @@ public:
     vcml::silkit::participant participant;
 
     test_bench(const sc_module_name& nm):
-        test_base(nm), participant("participant") {
+        test_base(nm), participant("participant0") {
         EXPECT_STREQ(participant.kind(), "vcml::silkit::participant");
     }
 
-    virtual void run_test() override {
-        // nothing to do
-    }
+    virtual void run_test() override { wait(sc_time(10, SC_SEC)); }
 };
 
 TEST(participant, simulate) {

@@ -38,9 +38,11 @@ class participant : public module
 private:
     SilKit::Services::Orchestration::ILifecycleService* m_lifecycle;
     SilKit::IParticipant* m_silkit_part;
+    SilKit::Services::Orchestration::ITimeSyncService* m_timesync;
 
     mutable mutex m_mtx;
     bool m_start;
+    sc_time m_currtimestep;
     condition_variable m_cond_start;
 
 public:
@@ -48,8 +50,14 @@ public:
     property<string> name;
     property<string> cfg_path;
     property<silkit_mode> mode;
+    property<sc_time> timestep;
 
     virtual SilKit::IParticipant* silkit_part() { return m_silkit_part; }
+
+    void shutdown_handler();
+    void start_handler();
+    void step_handler(const sc_time& now, const sc_time& duration);
+    void end_of_timestep();
 
     virtual void end_of_elaboration() override;
 

@@ -51,24 +51,77 @@ using namespace SilKit::Services::Orchestration;
 
 participant::participant(const sc_module_name& nm):
     module(nm),
+    m_lifecycle(),
+    m_silkit_part(),
+    m_timesync(),
     m_mtx(),
     m_start(false),
     m_cond_start(),
     registry_uri("registry_uri", "silkit://localhost:8500"),
     name("name", "vcml_participant"),
     cfg_path("cfg_path", ""),
-    mode("mode", SILKIT_MODE_COORDINATED) {
+    mode("mode", SILKIT_MODE_COORDINATED),
+    timestep("timestep", sc_time(1, SC_MS)) {
     log_info("SilKit Version: %s", SilKit::Version::String());
 
-    if (mode == SILKIT_MODE_UNKNOWN || mode == SILKIT_MODE_TIME_SYNC)
-        VCML_ERROR("silkit mode %s not implementd", to_string(mode).c_str());
+    SC_HAS_PROCESS(participant);
+    SC_THREAD(end_of_timestep);
 }
 
 const char* participant::version() const {
     return VCML_SILKIT_VERSION_STRING;
 }
 
+void participant::shutdown_handler() {
+    log_info("Shutdown requested");
+    request_stop();
+}
+
+void participant::start_handler() {
+    log_info("Start simulation");
+    std::unique_lock lock(m_mtx);
+    m_start = true;
+    lock.unlock();
+    m_cond_start.notify_one();
+}
+
+void participant::step_handler(const sc_time& now, const sc_time& duration) {
+    log_debug("next timestep: now: %s duration %s\n", now.to_string().c_str(),
+              duration.to_string().c_str());
+    std::unique_lock lock(m_mtx);
+    m_start = true;
+    m_currtimestep = duration;
+    lock.unlock();
+    m_cond_start.notify_all();
+}
+
+void participant::end_of_timestep() {
+    if (mode != SILKIT_MODE_TIME_SYNC)
+        return;
+
+    while (true) {
+        std::unique_lock lock(m_mtx);
+
+        sc_time t = m_currtimestep;
+        lock.unlock();
+        wait(t - sc_time(1, SC_NS));
+
+        while (sc_get_curr_simcontext()->pending_activity_at_current_time())
+            wait(SC_ZERO_TIME);
+        m_timesync->CompleteSimulationStep();
+
+        lock.lock();
+        m_cond_start.wait(lock, [this]() { return m_start; });
+        m_start = false;
+
+        wait(sc_time(1, SC_NS));
+    }
+}
+
 void participant::end_of_elaboration() {
+    if (mode == SILKIT_MODE_UNKNOWN)
+        VCML_ERROR("silkit mode %s not implementd", to_string(mode).c_str());
+
     const std::string cfg = R"(
     Description: My participant configuration
     Logging:
@@ -95,23 +148,30 @@ void participant::end_of_elaboration() {
         sm = OperationMode::Coordinated;
 
     m_lifecycle = m_silkit_part->CreateLifecycleService({ sm });
-    m_lifecycle->SetShutdownHandler([this]() {
-        log_info("Shutdown requested");
-        request_stop();
-    });
+    m_lifecycle->SetShutdownHandler([this] { shutdown_handler(); });
 
-    m_lifecycle->SetStartingHandler([this]() {
-        log_info("Start simulation");
-        std::unique_lock lock(m_mtx);
-        m_start = true;
-        lock.unlock();
-        m_cond_start.notify_one();
-    });
+    m_lifecycle->SetStartingHandler([this]() { start_handler(); });
+
+    if (mode == SILKIT_MODE_TIME_SYNC) {
+        m_timesync = m_lifecycle->CreateTimeSyncService();
+
+        using std::chrono::nanoseconds;
+        const nanoseconds ts(time_to_ns(timestep));
+
+        m_timesync->SetSimulationStepHandlerAsync(
+            [this](nanoseconds now, nanoseconds duration) {
+                step_handler(sc_time(now.count(), SC_NS),
+                             sc_time(duration.count(), SC_NS));
+            },
+            ts);
+    }
+
+    std::unique_lock lock(m_mtx);
 
     m_lifecycle->StartLifecycle();
 
-    std::unique_lock lock(m_mtx);
     m_cond_start.wait(lock, [this] { return m_start; });
+    m_start = false;
 
     // After returning from StartingHandler simulation is only ReadyToRun
     // We need to wait for transition to Running

@@ -33,5 +33,5 @@ function(unit_test nm mode)
     set_tests_properties(${nm} PROPERTIES TIMEOUT 60)
 endfunction()
 
-unit_test(participant coordinated vcml_participant)
+unit_test(participant time_sync vcml_participant)
 unit_test(service_eth autonomous vcml_participant0 vcml_participant1)
