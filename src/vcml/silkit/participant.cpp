@@ -117,8 +117,13 @@ void participant::end_of_timestep() {
         m_timesync->CompleteSimulationStep();
 
         lock.lock();
-        m_cond_start.wait(lock, [this]() { return m_start; });
+        while (!m_start) {
+            lock.unlock();
+            wait(SC_ZERO_TIME);
+            lock.lock();
+        }
         m_start = false;
+        lock.unlock();
 
         offset = m_tick;
     }
