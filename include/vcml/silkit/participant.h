@@ -36,6 +36,8 @@ ostream& operator<<(ostream& os, silkit_mode m);
 class participant : public module
 {
 private:
+    const sc_time m_tick;
+
     SilKit::Services::Orchestration::ILifecycleService* m_lifecycle;
     SilKit::IParticipant* m_silkit_part;
     SilKit::Services::Orchestration::ITimeSyncService* m_timesync;

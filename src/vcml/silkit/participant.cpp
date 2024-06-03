@@ -51,6 +51,7 @@ using namespace SilKit::Services::Orchestration;
 
 participant::participant(const sc_module_name& nm):
     module(nm),
+    m_tick(sc_time::from_value(1ull)),
     m_lifecycle(),
     m_silkit_part(),
     m_timesync(),
@@ -88,6 +89,10 @@ void participant::start_handler() {
 void participant::step_handler(const sc_time& now, const sc_time& duration) {
     log_debug("next timestep: now: %s duration %s\n", now.to_string().c_str(),
               duration.to_string().c_str());
+    if (now != SC_ZERO_TIME)
+        VCML_ERROR_ON((now - m_tick) != sc_time_stamp(),
+                      "Silkit time sync out of sync");
+
     std::unique_lock lock(m_mtx);
     m_start = true;
     m_currtimestep = duration;
@@ -99,12 +104,13 @@ void participant::end_of_timestep() {
     if (mode != SILKIT_MODE_TIME_SYNC)
         return;
 
+    sc_time offset(SC_ZERO_TIME);
     while (true) {
         std::unique_lock lock(m_mtx);
 
-        sc_time t = m_currtimestep;
+        const sc_time t = m_currtimestep;
         lock.unlock();
-        wait(t - sc_time(1, SC_NS));
+        wait(t - m_tick + offset);
 
         while (sc_get_curr_simcontext()->pending_activity_at_current_time())
             wait(SC_ZERO_TIME);
@@ -114,7 +120,7 @@ void participant::end_of_timestep() {
         m_cond_start.wait(lock, [this]() { return m_start; });
         m_start = false;
 
-        wait(sc_time(1, SC_NS));
+        offset = m_tick;
     }
 }
 
@@ -153,13 +159,15 @@ void participant::end_of_elaboration() {
     m_lifecycle->SetStartingHandler([this]() { start_handler(); });
 
     if (mode == SILKIT_MODE_TIME_SYNC) {
+        log_debug("Starting SilKit time sync with intial step size %s",
+                  timestep.get().to_string().c_str());
         m_timesync = m_lifecycle->CreateTimeSyncService();
 
-        using std::chrono::nanoseconds;
-        const nanoseconds ts(time_to_ns(timestep));
+        using ns = std::chrono::nanoseconds;
+        const ns ts(time_to_ns(timestep));
 
         m_timesync->SetSimulationStepHandlerAsync(
-            [this](nanoseconds now, nanoseconds duration) {
+            [this](ns now, ns duration) {
                 step_handler(sc_time(now.count(), SC_NS),
                              sc_time(duration.count(), SC_NS));
             },
