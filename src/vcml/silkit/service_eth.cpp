@@ -75,7 +75,8 @@ void service_eth::start_of_simulation() {
         [](IEthernetController*, const EthernetFrameTransmitEvent& event) {
             if (event.status != SilKit::Services::Ethernet::
                                     EthernetTransmitStatus::Transmitted) {
-                const string time = sc_time(event.timestamp.count(), SC_NS).to_string();
+                const string time = sc_time(event.timestamp.count(), SC_NS)
+                                        .to_string();
                 VCML_ERROR("frame not transmitted status: %d at: %s",
                            (int)event.status, time.c_str());
             }
