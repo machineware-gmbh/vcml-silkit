@@ -89,9 +89,10 @@ void participant::start_handler() {
 void participant::step_handler(const sc_time& now, const sc_time& duration) {
     log_debug("next timestep: now: %s duration %s\n", now.to_string().c_str(),
               duration.to_string().c_str());
-    if (now != SC_ZERO_TIME)
+    if (now != SC_ZERO_TIME) {
         VCML_ERROR_ON((now - m_tick) != sc_time_stamp(),
                       "Silkit time sync out of sync");
+    }
 
     std::unique_lock lock(m_mtx);
     m_start = true;

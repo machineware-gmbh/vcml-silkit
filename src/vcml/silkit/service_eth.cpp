@@ -71,7 +71,17 @@ void service_eth::start_of_simulation() {
             send_to_guest(SilKit::Util::ToStdVector(msg.frame.raw));
         };
 
+    IEthernetController::FrameTransmitHandler frame_transmit_handler =
+        [this](IEthernetController*, const EthernetFrameTransmitEvent& event) {
+            if (event.status != SilKit::Services::Ethernet::
+                                    EthernetTransmitStatus::Transmitted) {
+                VCML_ERROR("frame not transmitted status: %d at: %ld ns",
+                           (int)event.status, event.timestamp.count());
+            }
+        };
+
     m_eth_controller->AddFrameHandler(frame_handler);
+    m_eth_controller->AddFrameTransmitHandler(frame_transmit_handler);
     m_eth_controller->Activate();
 }
 
