@@ -17,6 +17,8 @@
 namespace vcml {
 namespace silkit {
 
+static const sc_time SC_EPSILON_TIME(time_from_value(1));
+
 istream& operator>>(istream& is, silkit_mode& m) {
     std::string str;
     is >> str;
@@ -51,7 +53,6 @@ using namespace SilKit::Services::Orchestration;
 
 participant::participant(const sc_module_name& nm):
     module(nm),
-    m_tick(sc_time::from_value(1ull)),
     m_lifecycle(),
     m_silkit_part(),
     m_timesync(),
@@ -66,7 +67,7 @@ participant::participant(const sc_module_name& nm):
     log_info("SilKit Version: %s", SilKit::Version::String());
 
     SC_HAS_PROCESS(participant);
-    SC_THREAD(end_of_timestep);
+    SC_THREAD(time_sync_thread);
 }
 
 const char* participant::version() const {
@@ -89,44 +90,42 @@ void participant::start_handler() {
 void participant::step_handler(const sc_time& now, const sc_time& duration) {
     log_debug("next timestep: now: %s duration %s\n", now.to_string().c_str(),
               duration.to_string().c_str());
-    if (now != SC_ZERO_TIME) {
-        VCML_ERROR_ON((now - m_tick) != sc_time_stamp(),
-                      "Silkit time sync out of sync");
-    }
+    if (now != SC_ZERO_TIME && (now - SC_EPSILON_TIME) != sc_time_stamp())
+        VCML_ERROR("Silkit time sync out of sync");
 
-    std::unique_lock lock(m_mtx);
-    m_start = true;
+    m_mtx.lock();
     m_currtimestep = duration;
-    lock.unlock();
+    m_mtx.unlock();
+
+    m_start = true;
     m_cond_start.notify_all();
 }
 
-void participant::end_of_timestep() {
+void participant::time_sync_thread() {
     if (mode != SILKIT_MODE_TIME_SYNC)
         return;
 
-    sc_time offset(SC_ZERO_TIME);
-    while (true) {
-        std::unique_lock lock(m_mtx);
+    sc_time offset(SC_EPSILON_TIME);
 
-        const sc_time t = m_currtimestep;
-        lock.unlock();
-        wait(t - m_tick + offset);
+    while (true) {
+        m_mtx.lock();
+        const sc_time duration = m_currtimestep;
+        m_mtx.unlock();
+
+        wait(duration - offset);
+        offset = SC_ZERO_TIME;
 
         while (sc_get_curr_simcontext()->pending_activity_at_current_time())
             wait(SC_ZERO_TIME);
+
         m_timesync->CompleteSimulationStep();
 
-        lock.lock();
-        while (!m_start) {
-            lock.unlock();
+        // Keep simulation time from advancing but still allow delta processes
+        // to execute so that the simulation does not lock up
+        while (!m_start)
             wait(SC_ZERO_TIME);
-            lock.lock();
-        }
-        m_start = false;
-        lock.unlock();
 
-        offset = m_tick;
+        m_start = false;
     }
 }
 
@@ -161,11 +160,10 @@ void participant::end_of_elaboration() {
 
     m_lifecycle = m_silkit_part->CreateLifecycleService({ sm });
     m_lifecycle->SetShutdownHandler([this] { shutdown_handler(); });
-
     m_lifecycle->SetStartingHandler([this]() { start_handler(); });
 
     if (mode == SILKIT_MODE_TIME_SYNC) {
-        log_debug("Starting SilKit time sync with intial step size %s",
+        log_debug("Starting SilKit time sync with initial step size %s",
                   timestep.get().to_string().c_str());
         m_timesync = m_lifecycle->CreateTimeSyncService();
 
@@ -184,14 +182,13 @@ void participant::end_of_elaboration() {
 
     m_lifecycle->StartLifecycle();
 
-    m_cond_start.wait(lock, [this] { return m_start; });
+    m_cond_start.wait(lock, [this]() -> bool { return m_start; });
     m_start = false;
 
     // After returning from StartingHandler simulation is only ReadyToRun
     // We need to wait for transition to Running
-    while (m_lifecycle->State() != ParticipantState::Running) {
-        // nothing to do
-    }
+    while (m_lifecycle->State() != ParticipantState::Running)
+        mwr::cpu_yield();
 }
 
 participant::~participant() {

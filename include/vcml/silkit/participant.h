@@ -36,14 +36,12 @@ ostream& operator<<(ostream& os, silkit_mode m);
 class participant : public module
 {
 private:
-    const sc_time m_tick;
-
     SilKit::Services::Orchestration::ILifecycleService* m_lifecycle;
     SilKit::IParticipant* m_silkit_part;
     SilKit::Services::Orchestration::ITimeSyncService* m_timesync;
 
     mutable mutex m_mtx;
-    bool m_start;
+    atomic<bool> m_start;
     sc_time m_currtimestep;
     condition_variable m_cond_start;
 
@@ -59,7 +57,7 @@ public:
     void shutdown_handler();
     void start_handler();
     void step_handler(const sc_time& now, const sc_time& duration);
-    void end_of_timestep();
+    void time_sync_thread();
 
     virtual void end_of_elaboration() override;
 
