@@ -22,7 +22,7 @@ if(CMAKE_BUILD_TYPE MATCHES "ASAN")
 elseif(CMAKE_BUILD_TYPE MATCHES "TSAN")
     string(APPEND env "TSAN_OPTIONS=suppressions=${CMAKE_CURRENT_SOURCE_DIR}/sanitizer/tsan.suppress:halt_on_error=1;")
 elseif(CMAKE_BUILD_TYPE MATCHES "UBSAN")
-    string(APPEND env "UBSAN_OPTIONS=suppressions=${CMAKE_CURRENT_SOURCE_DIR}/sanitizer/ubsan.suppress:print_stacktrace=1;")
+    string(APPEND env "UBSAN_OPTIONS=suppressions=${CMAKE_CURRENT_SOURCE_DIR}/sanitizer/ubsan.suppress:print_stacktrace=1:halt_on_error=1;")
 endif()
 
 add_library(testing STATIC testing.cpp)
