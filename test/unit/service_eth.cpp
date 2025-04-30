@@ -27,8 +27,8 @@ public:
     vcml::silkit::service_eth service0;
     vcml::silkit::service_eth service1;
 
-    eth_initiator_array eth_array_tx;
-    eth_target_array eth_array_rx;
+    eth_initiator_array<> eth_array_tx;
+    eth_target_array<> eth_array_rx;
 
     test_bench(const sc_module_name& nm):
         test_base(nm),
