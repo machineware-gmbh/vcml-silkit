@@ -22,24 +22,39 @@ jobs:
           submodules: 'recursive'
           token: ${{secrets.CI_TOKEN}}
 
-      - name: Configure Models
+      - name: Configure
         run: cmake -B BUILD -G Ninja -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DVCML_SILKIT_TESTS=ON -DVCML_SILKIT_COVERAGE=ON .
 
-      - name: Build Models
+      - name: Build
         run: cmake --build BUILD
 
-      - name: Test Models
-        run: ctest --test-dir BUILD -C ${{env.BUILD_TYPE}} --output-on-failure
+      - name: Test
+        working-directory: BUILD
+        run: ctest --output-on-failure
 
       - name: Generate Coverage Report
         run: |
-          mkdir -p vcml-silkit-coverage-report
-          gcovr --html-details -f 'include/*' -f 'src/*' --output vcml-silkit-coverage-report/vcml-silkit.html --exclude-lines-by-pattern '\s*(VCML|MWR)_ERROR.*'
+          mkdir -p ${{github.event.repository.name}}-coverage-report
+          gcovr --html-details -f 'include/*' -f 'src/*' \
+                --output ${{github.event.repository.name}}-coverage-report/${{github.event.repository.name}}.html \
+                --exclude-lines-by-pattern '\s*(VCML|MWR)_ERROR.*'
 
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v4
         with:
-          retention-days: 3
-          name: vcml-silkit-coverage-report
-          path: vcml-silkit-coverage-report/
+          retention-days: 7
+          name: ${{github.event.repository.name}}-coverage-report
+          path: ${{github.event.repository.name}}-coverage-report/
+
+      - name: Upload Logs
+        uses: actions/upload-artifact@v4
+        if: '!cancelled()'
+        with:
+          name: ${{github.event.repository.name}}-logs-coverage
+          path: |
+              BUILD/.ninja_log
+              BUILD/CMakeCache.txt
+              BUILD/Testing/Temporary/LastTest.log
+          include-hidden-files: true
+          retention-days: 7
 
