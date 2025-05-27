@@ -11,6 +11,7 @@
 #ifndef VCML_SILKIT_SILKIT_H
 #define VCML_SILKIT_SILKIT_H
 
+// NOLINTBEGIN(readability-identifier-naming)
 namespace SilKit {
 
 class IParticipant;
@@ -30,5 +31,7 @@ class ITimeSyncService;
 } // namespace Orchestration
 } // namespace Services
 } // namespace SilKit
+
+// NOLINTEND(readability-identifier-naming)
 
 #endif
