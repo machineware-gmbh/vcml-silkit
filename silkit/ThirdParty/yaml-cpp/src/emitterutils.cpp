@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <iomanip>
 #include <sstream>
+#include <stdint.h> // MWR added
 
 #include "emitterutils.h"
 #include "exp.h"
