@@ -1,8 +1,0 @@
-Description: Sample registry configuration.
-
-ListenUri: silkit://0.0.0.0:8501
-
-Logging:
-  Sinks:
-    - Type: Stdout
-      Level: Trace

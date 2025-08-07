@@ -1,5 +1,0 @@
-Description: Sample Configuration for the Network Simulator Demo
-Logging:
-  Sinks:
-    - Level: Info
-      Type: Stdout
