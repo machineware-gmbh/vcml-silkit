@@ -14,6 +14,8 @@
 #include "silkit/SilKit.hpp"
 #include "silkit/SilKitVersion.hpp"
 
+#include "silkit/services/orchestration/OrchestrationDatatypes.hpp"
+
 namespace vcml {
 namespace silkit {
 
@@ -56,6 +58,7 @@ participant::participant(const sc_module_name& nm):
     m_lifecycle(),
     m_silkit_part(),
     m_timesync(),
+    m_done(),
     m_mtx(),
     m_start(false),
     m_cond_start(),
@@ -180,7 +183,7 @@ void participant::end_of_elaboration() {
 
     std::unique_lock lock(m_mtx);
 
-    m_lifecycle->StartLifecycle();
+    m_done = m_lifecycle->StartLifecycle();
 
     m_cond_start.wait(lock, [this]() -> bool { return m_start; });
     m_start = false;
@@ -203,6 +206,8 @@ participant::~participant() {
             m_lifecycle->ReportError(msg);
             VCML_ERROR("%s", msg);
         }
+
+        m_done.wait();
     }
 
     if (m_silkit_part)
