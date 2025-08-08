@@ -8,6 +8,9 @@
  #                                                                            #
  ##############################################################################
 
+ # set(SILKIT_REGISTRY $<TARGET_FILE:silkit_registry>)
+ # set(SILKIT_SYSTEM_CONTROLLER $<TARGET_FILE:silkit_system_controller>)
+
 function(unit_test nm mode)
     set(script ${CMAKE_CURRENT_BINARY_DIR}/${nm})
     if(CMAKE_CONFIGURATION_TYPES)
@@ -19,8 +22,7 @@ function(unit_test nm mode)
     endif()
 
     add_executable(${nm} ${nm}.cpp)
-    add_dependencies(${nm} sil-kit-registry sil-kit-system-controller)
-    target_link_libraries(${nm} testing SilKit vcml-silkit gtest gmock)
+    target_link_libraries(${nm} testing libsilkit vcml-silkit gtest gmock)
     target_compile_options(${nm} PRIVATE ${MWR_COMPILER_WARN_FLAGS})
     set_target_properties(${nm} PROPERTIES CXX_CLANG_TIDY "${VCML_SILKIT_LINTER}")
 

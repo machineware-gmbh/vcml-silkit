@@ -25,12 +25,12 @@ for var in [v for v in re.split(r'(?<!\\);', '@env@') if v]:
 for var, val in env.items():
     print(f'{var} = {val}')
 
-cmd = ['$<TARGET_FILE:sil-kit-registry>', '-s']
+cmd = ['$<TARGET_FILE:silkit_registry>']
 pr = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
 pr.expect('SIL Kit Registry listening on silkit://localhost:8500')
 
 if '@mode@' != 'autonomous':
-    cmd = ['$<TARGET_FILE:sil-kit-system-controller>', '--non-interactive', '@ARGN@']
+    cmd = ['$<TARGET_FILE:silkit_system_controller>', '@ARGN@']
     pc = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
     pc.expect('Creating participant \'SystemController\' with registry silkit://localhost:8500')
 

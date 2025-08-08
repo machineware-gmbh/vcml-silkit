@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html class="ng-csp" data-placeholder-focus="false" lang="de-DE" data-locale="de_DE" translate="no" >
+	<head
+ data-requesttoken="">
+		<meta charset="utf-8">
+		<title>
+			MachineWare Cloud		</title>
+		<meta name="csp-nonce" nonce="/wcQO/aF2md2ncarrmvfYTvyBbKoiWVLUECNsUlFQUo=">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+				<meta name="apple-itunes-app" content="app-id=1125420102">
+				<meta name="theme-color" content="#00679e">
+		<link rel="icon" href="/themes/hetzner/core/img/favicon.ico">
+		<link rel="apple-touch-icon" href="/themes/hetzner/core/img/favicon-touch.png">
+		<link rel="mask-icon" sizes="any" href="/core/img/favicon-mask.svg" color="#00679e">
+		<link rel="manifest" href="/apps/theming/manifest?v=a34c06a0" crossorigin="use-credentials">
+		<link rel="stylesheet" href="/core/css/server.css?v=735fa924-18">
+<link rel="stylesheet" href="/apps/theming/css/default.css?v=5f8d3ecb-18">
+<link rel="stylesheet" href="/core/css/guest.css?v=735fa924-18">
+<link rel="stylesheet" href="/themes/hetzner/core/css/server.css?v=cfcd2084-18">
+		<script nonce="/wcQO/aF2md2ncarrmvfYTvyBbKoiWVLUECNsUlFQUo=" defer src="/dist/core-common.js?v=735fa924-18"></script>
+<script nonce="/wcQO/aF2md2ncarrmvfYTvyBbKoiWVLUECNsUlFQUo=" defer src="/dist/core-main.js?v=735fa924-18"></script>
+<script nonce="/wcQO/aF2md2ncarrmvfYTvyBbKoiWVLUECNsUlFQUo=" defer src="/core/l10n/de_DE.js?v=735fa924-18"></script>
+<script nonce="/wcQO/aF2md2ncarrmvfYTvyBbKoiWVLUECNsUlFQUo=" defer src="/apps/theming/l10n/de_DE.js?v=735fa924-18"></script>
+<script nonce="/wcQO/aF2md2ncarrmvfYTvyBbKoiWVLUECNsUlFQUo=" defer src="/apps/theming/js/theming.js?v=735fa924-18"></script>
+<script nonce="/wcQO/aF2md2ncarrmvfYTvyBbKoiWVLUECNsUlFQUo=" defer src="/apps/files_sharing/l10n/de_DE.js?v=735fa924-18"></script>
+<script nonce="/wcQO/aF2md2ncarrmvfYTvyBbKoiWVLUECNsUlFQUo=" defer src="/dist/files_sharing-main.js?v=735fa924-18"></script>
+		<link rel="stylesheet" media="" href="/apps/theming/theme/default.css?plain=1&amp;v=a34c06a0" class="theme"/><link rel="stylesheet" media="(prefers-color-scheme: light)" href="/apps/theming/theme/light.css?plain=1&amp;v=a34c06a0" class="theme"/><link rel="stylesheet" media="(prefers-color-scheme: dark)" href="/apps/theming/theme/dark.css?plain=1&amp;v=a34c06a0" class="theme"/><link rel="stylesheet" media="(prefers-contrast: more)" href="/apps/theming/theme/light-highcontrast.css?plain=1&amp;v=a34c06a0" class="theme"/><link rel="stylesheet" media="(prefers-color-scheme: dark) and (prefers-contrast: more)" href="/apps/theming/theme/dark-highcontrast.css?plain=1&amp;v=a34c06a0" class="theme"/><link rel="stylesheet" media="" href="/apps/theming/theme/light.css?plain=0&amp;v=a34c06a0" class="theme"/><link rel="stylesheet" media="" href="/apps/theming/theme/dark.css?plain=0&amp;v=a34c06a0" class="theme"/><link rel="stylesheet" media="" href="/apps/theming/theme/light-highcontrast.css?plain=0&amp;v=a34c06a0" class="theme"/><link rel="stylesheet" media="" href="/apps/theming/theme/dark-highcontrast.css?plain=0&amp;v=a34c06a0" class="theme"/><link rel="stylesheet" media="" href="/apps/theming/theme/opendyslexic.css?plain=0&amp;v=a34c06a0" class="theme"/><meta name="color-scheme" content="light dark"/>	</head>
+	<body id="body-login"  data-themes="">
+		<noscript>
+	<div id="nojavascript">
+		<div>
+			Diese Anwendung benötigt JavaScript zum ordnungsgemäßen Betrieb. Bitte <a href="https://www.enable-javascript.com/" target="_blank" rel="noreferrer noopener">aktivieren Sie JavaScript</a> und laden Sie die Seite neu.		</div>
+	</div>
+</noscript>
+		<div id="initial-state-container" style="display: none;">
+			<input type="hidden" id="initial-state-core-versionHash" value="IjczNWZhOTI0Ig==">
+			<input type="hidden" id="initial-state-theming-data" value="eyJuYW1lIjoiTWFjaGluZVdhcmUgQ2xvdWQiLCJzbG9nYW4iOiIiLCJ1cmwiOiJodHRwczpcL1wvd3d3Lm1hY2hpbmV3YXJlLmRlIiwiaW1wcmludFVybCI6Imh0dHBzOlwvXC93d3cubWFjaGluZXdhcmUuZGVcL3BhZ2VzXC9pbXByaW50Lmh0bWwiLCJwcml2YWN5VXJsIjoiaHR0cHM6XC9cL3d3dy5tYWNoaW5ld2FyZS5kZVwvcGFnZXNcL2RhdGVuc2NodXR6Lmh0bWwiLCJwcmltYXJ5Q29sb3IiOiIjMDA2NzllIiwiYmFja2dyb3VuZENvbG9yIjoiIzAwNjc5ZSIsImRlZmF1bHRQcmltYXJ5Q29sb3IiOiIjMDA2NzllIiwiZGVmYXVsdEJhY2tncm91bmRDb2xvciI6IiMwMDY3OWUiLCJpbnZlcnRlZCI6ZmFsc2UsImNhY2hlQnVzdGVyIjoiYTM0YzA2YTAiLCJlbmFibGVkVGhlbWVzIjpbXSwiY29sb3IiOiIjMDA2NzllIiwiIjoiY29sb3IgaXMgZGVwcmVjYXRlZCBzaW5jZSBOZXh0Y2xvdWQgMjksIHVzZSBwcmltYXJ5Q29sb3IgaW5zdGVhZCJ9">
+			<input type="hidden" id="initial-state-comments-maxAutoCompleteResults" value="MTA=">
+	</div>
+		<div class="wrapper">
+			<div class="v-align">
+									<header>
+						<div id="header">
+							<div class="logo"></div>
+						</div>
+					</header>
+								<main>
+					<h1 class="hidden-visually">
+						MachineWare Cloud					</h1>
+					<div class="guest-box">
+	<h2>Fehler</h2>
+	<ul>
+			<li>
+			<p>App not installed: </p>
+					</li>
+		</ul>
+</div>
+				</main>
+			</div>
+		</div>
+				<footer class="guest-box ">
+			<p class="info">
+				<a href="https://www.machineware.de" target="_blank" rel="noreferrer noopener" class="entity-name">MachineWare Cloud</a><br/><span class="footer__legal-links"><a href="https://www.machineware.de/pages/imprint.html" class="legal" target="_blank" rel="noreferrer noopener">Impressum</a> · <a href="https://www.machineware.de/pages/datenschutz.html" class="legal" target="_blank" rel="noreferrer noopener">Datenschutzerklärung</a></span>			</p>
+		</footer>
+	</body>
+</html>
