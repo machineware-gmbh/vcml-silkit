@@ -8,9 +8,6 @@
  #                                                                            #
  ##############################################################################
 
- # set(SILKIT_REGISTRY $<TARGET_FILE:silkit_registry>)
- # set(SILKIT_SYSTEM_CONTROLLER $<TARGET_FILE:silkit_system_controller>)
-
 function(unit_test nm mode)
     set(script ${CMAKE_CURRENT_BINARY_DIR}/${nm})
     if(CMAKE_CONFIGURATION_TYPES)
