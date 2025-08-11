@@ -15,6 +15,9 @@
 #include "silkit/SilKitVersion.hpp"
 
 #include "silkit/services/orchestration/OrchestrationDatatypes.hpp"
+#include <chrono>
+
+using namespace std::chrono_literals;
 
 namespace vcml {
 namespace silkit {
@@ -207,7 +210,9 @@ participant::~participant() {
             VCML_ERROR("%s", msg);
         }
 
-        m_done.wait();
+        while (m_done.wait_for(100ms) != std::future_status::ready) {
+            // do nothing
+        }
     }
 
     if (m_silkit_part)

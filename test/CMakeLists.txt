@@ -9,6 +9,7 @@
  ##############################################################################
 
 find_package(Python3 "3.3" REQUIRED)
+
 set(env "LD_LIBRARY_PATH=$<TARGET_FILE_DIR:libsilkit>:$ENV{LD_LIBRARY_PATH};")
 
 if(NOT TARGET gtest OR NOT TARGET gmock)
