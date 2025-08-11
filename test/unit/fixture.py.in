@@ -52,7 +52,7 @@ for var in '@ARGN@'.split(';'):
 cmd.append('@CMAKE_CURRENT_SOURCE_DIR@')
 print(cmd)
 
-result = subprocess.run(cmd, env=env)
+result = subprocess.run(cmd, env=env, stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.STDOUT)
 
 if '@mode@' != 'autonomous':
     try_kill(pc, 15)
