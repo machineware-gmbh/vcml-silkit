@@ -22,7 +22,7 @@ function(unit_test nm mode)
     target_link_libraries(${nm} testing libsilkit vcml-silkit gtest gmock)
     target_compile_options(${nm} PRIVATE ${MWR_COMPILER_WARN_FLAGS})
     set_target_properties(${nm} PROPERTIES CXX_CLANG_TIDY "${VCML_SILKIT_LINTER}")
-    if (_WIN32)
+    if (WIN32)
         add_custom_command(TARGET ${nm} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
             $<TARGET_FILE:libsilkit> $<TARGET_FILE_DIR:${nm}>)
     endif()
