@@ -49,7 +49,7 @@ target_include_directories(vcml-silkit SYSTEM PRIVATE ${SILKIT_INCLUDE_DIR})
 
 target_link_libraries(vcml-silkit PUBLIC mwr)
 target_link_libraries(vcml-silkit PUBLIC vcml)
-target_link_libraries(vcml-silkit PRIVATE libsilkit)
+target_link_libraries(vcml-silkit PUBLIC libsilkit)
 
 set_target_properties(vcml-silkit PROPERTIES DEBUG_POSTFIX "d")
 set_target_properties(vcml-silkit PROPERTIES CXX_CLANG_TIDY "${VCML_SILKIT_LINTER}")
@@ -66,3 +66,7 @@ endif()
 
 install(TARGETS vcml-silkit DESTINATION lib)
 install(DIRECTORY ${inc}/ DESTINATION include)
+
+install(FILES ${LIBSILKIT_LIB} DESTINATION bin)
+install(PROGRAMS ${LIBSILKIT_PROGRAMS} DESTINATION bin)
+install(DIRECTORY ${LIBSILKIT_HEADERS} DESTINATION include)
