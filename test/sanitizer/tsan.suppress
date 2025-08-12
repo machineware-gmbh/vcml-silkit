@@ -19,5 +19,11 @@ race:sc_core::sc_prim_channel_registry::async_update_list::append
 # main thread, but sometimes also from vcml processor SC_THREADS
 mutex:vcml::thctl::suspend
 
-# deleting a participant before lifecycleservice gets deleted generates a data race
-race:SilKit::_detail_v1::Impl::Services::Orchestration::LifecycleService::~LifecycleService
+# main thread starts async read while IO thread finishes connect
+race:VSilKit::AsioGenericRawByteStream::AsyncReadSome
+
+# IO thread writes ConnectKnownParticipants string while main thread reads it, silkit race
+race:SilKit::Core::ConnectKnownParticipants::SetKnownParticipants
+
+# singleton is deleted while an internal silkit thread is still using it
+race:SilKit_LifecycleService_WaitForLifecycleToComplete

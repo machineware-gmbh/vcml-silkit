@@ -27,6 +27,7 @@ namespace Orchestration {
 
 class ILifecycleService;
 class ITimeSyncService;
+enum class ParticipantState : int16_t;
 
 } // namespace Orchestration
 } // namespace Services

@@ -20,6 +20,8 @@
 
 #include "silkit.h"
 
+#include <future>
+
 namespace vcml {
 namespace silkit {
 
@@ -39,6 +41,7 @@ private:
     SilKit::Services::Orchestration::ILifecycleService* m_lifecycle;
     SilKit::IParticipant* m_silkit_part;
     SilKit::Services::Orchestration::ITimeSyncService* m_timesync;
+    std::future<SilKit::Services::Orchestration::ParticipantState> m_done;
 
     mutable mutex m_mtx;
     atomic<bool> m_start;

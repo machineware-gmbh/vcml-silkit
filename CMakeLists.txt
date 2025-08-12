@@ -22,20 +22,14 @@ option(VCML_SILKIT_TESTS "Build unit tests" OFF)
 option(VCML_SILKIT_COVERAGE "Generate coverage data" OFF)
 set(VCML_SILKIT_LINTER "" CACHE STRING "Code linter to use")
 
-option(SILKIT_BUILD_TESTS "" OFF)
-option(SILKIT_BUILD_DEMOS "" OFF)
-option(SILKIT_BUILD_UTILITIES "" ON)
-set(SILKIT_PACKAGE_SYMBOLS OFF CACHE BOOL "" FORCE)
-set(SILKIT_BUILD_STATIC ON CACHE BOOL "" FORCE)
-add_subdirectory(silkit EXCLUDE_FROM_ALL)
-get_target_property(SILKIT_INCLUDE_DIR SilKitInterface INTERFACE_INCLUDE_DIRECTORIES)
-
 find_github_repo(vcml "machineware-gmbh/vcml")
 
 set(src ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(inc ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(ext ${CMAKE_CURRENT_SOURCE_DIR}/external)
 set(gen ${CMAKE_CURRENT_BINARY_DIR}/gen)
 
+add_subdirectory(${ext}/silkit-4.0.56)
 
 configure_file(${src}/vcml/silkit/version.h.in
                ${gen}/vcml/silkit/version.h @ONLY)
@@ -55,7 +49,7 @@ target_include_directories(vcml-silkit SYSTEM PRIVATE ${SILKIT_INCLUDE_DIR})
 
 target_link_libraries(vcml-silkit PUBLIC mwr)
 target_link_libraries(vcml-silkit PUBLIC vcml)
-target_link_libraries(vcml-silkit PRIVATE SilKit)
+target_link_libraries(vcml-silkit PRIVATE libsilkit)
 
 set_target_properties(vcml-silkit PROPERTIES DEBUG_POSTFIX "d")
 set_target_properties(vcml-silkit PROPERTIES CXX_CLANG_TIDY "${VCML_SILKIT_LINTER}")

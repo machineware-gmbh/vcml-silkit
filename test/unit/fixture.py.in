@@ -14,7 +14,16 @@ import subprocess
 import sys
 import os
 import re
+import time
 from pexpect.popen_spawn import PopenSpawn
+
+def try_kill(proc, signum = 15, attempts = 5):
+    for attempt in range(attempts):
+        try:
+            proc.kill(signum)
+            return
+        except Exception:
+            time.sleep(0.1)
 
 log = sys.stdout
 env = os.environ
@@ -25,12 +34,12 @@ for var in [v for v in re.split(r'(?<!\\);', '@env@') if v]:
 for var, val in env.items():
     print(f'{var} = {val}')
 
-cmd = ['$<TARGET_FILE:sil-kit-registry>', '-s']
+cmd = ['$<TARGET_FILE:silkit_registry>']
 pr = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
 pr.expect('SIL Kit Registry listening on silkit://localhost:8500')
 
 if '@mode@' != 'autonomous':
-    cmd = ['$<TARGET_FILE:sil-kit-system-controller>', '--non-interactive', '@ARGN@']
+    cmd = ['$<TARGET_FILE:silkit_system_controller>', '@ARGN@']
     pc = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
     pc.expect('Creating participant \'SystemController\' with registry silkit://localhost:8500')
 
@@ -46,7 +55,7 @@ print(cmd)
 result = subprocess.run(cmd, env=env)
 
 if '@mode@' != 'autonomous':
-    pc.kill(15)
+    try_kill(pc, 15)
     pc.wait()
 
 pr.kill(15)
