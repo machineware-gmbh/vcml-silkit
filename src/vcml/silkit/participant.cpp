@@ -210,9 +210,7 @@ participant::~participant() {
             VCML_ERROR("%s", msg);
         }
 
-        while (m_done.wait_for(100ms) != std::future_status::ready) {
-            // do nothing
-        }
+        m_done.wait_for(100ms);
     }
 
     if (m_silkit_part)
