@@ -14,7 +14,16 @@ import subprocess
 import sys
 import os
 import re
+import time
 from pexpect.popen_spawn import PopenSpawn
+
+def try_kill(proc, signum = 15, attempts = 5):
+    for attempt in range(attempts):
+        try:
+            proc.kill(signum)
+            return
+        except Exception:
+            time.sleep(0.1)
 
 log = sys.stdout
 env = os.environ
@@ -46,7 +55,7 @@ print(cmd)
 result = subprocess.run(cmd, env=env)
 
 if '@mode@' != 'autonomous':
-    pc.kill(15)
+    try_kill(pc, 15)
     pc.wait()
 
 pr.kill(15)
