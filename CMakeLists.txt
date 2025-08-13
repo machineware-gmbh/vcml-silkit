@@ -49,7 +49,7 @@ target_include_directories(vcml-silkit SYSTEM PRIVATE ${SILKIT_INCLUDE_DIR})
 
 target_link_libraries(vcml-silkit PUBLIC mwr)
 target_link_libraries(vcml-silkit PUBLIC vcml)
-target_link_libraries(vcml-silkit PUBLIC libsilkit)
+target_link_libraries(vcml-silkit PRIVATE libsilkit)
 
 set_target_properties(vcml-silkit PROPERTIES DEBUG_POSTFIX "d")
 set_target_properties(vcml-silkit PROPERTIES CXX_CLANG_TIDY "${VCML_SILKIT_LINTER}")
