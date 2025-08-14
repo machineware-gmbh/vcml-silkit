@@ -37,6 +37,8 @@ add_executable(silkit_system_controller IMPORTED GLOBAL)
 set_target_properties(silkit_system_controller PROPERTIES
     IMPORTED_LOCATION "${__silkit_target}/sil-kit-system-controller${CMAKE_EXECUTABLE_SUFFIX}")
 
-install(FILES "$<TARGET_FILE:libsilkit>" DESTINATION lib)
-install(PROGRAMS "$<TARGET_FILE:silkit_registry>" "$<TARGET_FILE:silkit_system_controller>" DESTINATION lib)
-install(DIRECTORY ${__libsilkitinclude}/silkit DESTINATION include)
+set(LIBSILKIT_LIB $<TARGET_FILE:libsilkit> CACHE STRING "")
+set(LIBSILKIT_PROGRAMS
+    "$<TARGET_FILE:silkit_registry>;$<TARGET_FILE:silkit_system_controller>"
+    CACHE STRING "silkit executable files")
+set(LIBSILKIT_HEADERS ${__libsilkitinclude}/silkit CACHE STRING "")

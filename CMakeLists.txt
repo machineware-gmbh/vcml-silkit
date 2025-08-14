@@ -66,3 +66,7 @@ endif()
 
 install(TARGETS vcml-silkit DESTINATION lib)
 install(DIRECTORY ${inc}/ DESTINATION include)
+
+install(FILES ${LIBSILKIT_LIB} DESTINATION bin)
+install(PROGRAMS ${LIBSILKIT_PROGRAMS} DESTINATION bin)
+install(DIRECTORY ${LIBSILKIT_HEADERS} DESTINATION include)
