@@ -64,7 +64,7 @@ public:
         sc_event ev;
 
         // in autonomous mode wait for everyone to get ready
-        usleep(10000);
+        sleep(1);
 
         if (part.name == "vcml_participant0") {
             eth_tx.send(frame);
