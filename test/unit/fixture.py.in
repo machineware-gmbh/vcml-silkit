@@ -39,20 +39,28 @@ pr = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
 pr.expect('SIL Kit Registry listening on silkit://localhost:8500')
 
 if '@mode@' != 'autonomous':
-    cmd = ['$<TARGET_FILE:silkit_system_controller>', '@ARGN@']
+    cmd = ['$<TARGET_FILE:silkit_system_controller>']
+    cmd.extend('@ARGN@'.split(';'))
     pc = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
     pc.expect('Creating participant \'SystemController\' with registry silkit://localhost:8500')
 
-cmd = ['$<TARGET_FILE:@nm@>']
+part = []
 i = 0
 for var in '@ARGN@'.split(';'):
-    cmd.extend(['-c', f'system.participant{i}.mode=@mode@'])
-    cmd.extend(['-c', f'system.participant{i}.name={var}'])
+    cmd = ['$<TARGET_FILE:@nm@>']
+    cmd.extend(['-c', f'system.participant.mode=@mode@'])
+    cmd.extend(['-c', f'system.participant.name={var}'])
+    cmd.append('@CMAKE_CURRENT_SOURCE_DIR@')
+    print(cmd)
+    part.append(PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8'))
+    part[i].expect('SilKit Version: 4.0.56')
     i += 1
-cmd.append('@CMAKE_CURRENT_SOURCE_DIR@')
-print(cmd)
 
-result = subprocess.run(cmd, env=env)
+result = 0
+for p in part:
+    res = p.wait()
+    if res != 0 and result == 0:
+        result = res
 
 if '@mode@' != 'autonomous':
     try_kill(pc, 15)
@@ -61,4 +69,4 @@ if '@mode@' != 'autonomous':
 pr.kill(15)
 pr.wait()
 
-sys.exit(result.returncode)
+sys.exit(result)

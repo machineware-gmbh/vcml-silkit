@@ -24,6 +24,7 @@ for type in $builds; do (
           -DCMAKE_BUILD_TYPE=$type           \
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
           -DCMAKE_INSTALL_PREFIX=$prefix     \
+          -DVCML_SILKIT_TESTS=ON             \
           $home
 
     cmake --build $build -j $(nproc) -- install

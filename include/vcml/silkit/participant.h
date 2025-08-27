@@ -48,6 +48,8 @@ private:
     sc_time m_currtimestep;
     condition_variable m_cond_start;
 
+    static bool has_instance;
+
 public:
     property<string> registry_uri;
     property<string> name;

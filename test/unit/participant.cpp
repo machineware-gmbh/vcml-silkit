@@ -16,7 +16,7 @@ public:
     vcml::silkit::participant participant;
 
     test_bench(const sc_module_name& nm):
-        test_base(nm), participant("participant0") {
+        test_base(nm), participant("participant") {
         EXPECT_STREQ(participant.kind(), "vcml::silkit::participant");
     }
 
