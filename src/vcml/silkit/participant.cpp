@@ -194,9 +194,10 @@ void participant::end_of_elaboration() {
             ts);
     }
 
+    std::unique_lock lock(m_mtx);
+
     m_done = m_lifecycle->StartLifecycle();
 
-    std::unique_lock lock(m_mtx);
     m_cond_start.wait(lock, [this]() -> bool { return m_start; });
     m_start = false;
 
