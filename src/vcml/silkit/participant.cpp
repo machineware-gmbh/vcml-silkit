@@ -24,6 +24,8 @@ namespace silkit {
 
 static const sc_time SC_EPSILON_TIME(time_from_value(1));
 
+bool participant::has_instance = false;
+
 istream& operator>>(istream& is, silkit_mode& m) {
     std::string str;
     is >> str;
@@ -72,8 +74,16 @@ participant::participant(const sc_module_name& nm):
     timestep("timestep", sc_time(1, SC_MS)) {
     log_info("SilKit Version: %s", SilKit::Version::String());
 
+    if (mode != SILKIT_MODE_AUTONOMOUS && has_instance) {
+        VCML_ERROR(
+            "Multiple SIL Kit participants within a single SystemC instance "
+            "are only supported in SIL Kit autonomous mode");
+    }
+
     SC_HAS_PROCESS(participant);
     SC_THREAD(time_sync_thread);
+
+    has_instance = true;
 }
 
 const char* participant::version() const {
