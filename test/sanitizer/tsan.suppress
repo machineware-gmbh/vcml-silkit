@@ -27,3 +27,7 @@ race:SilKit::Core::ConnectKnownParticipants::SetKnownParticipants
 
 # singleton is deleted while an internal silkit thread is still using it
 race:SilKit_LifecycleService_WaitForLifecycleToComplete
+
+# silkit holds its lock while we hold ours
+# this is intentional for coordinated startup and does not indicate a deadlock
+deadlock:SilKit::Services::Orchestration::SystemMonitor::AddSystemStateHandler

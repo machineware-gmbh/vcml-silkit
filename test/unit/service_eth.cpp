@@ -102,6 +102,9 @@ public:
             wait(ev);
             eth_tx.send(frame);
         }
+
+        // wait for everyone to finish
+        mwr::sleep(1);
     }
 };
 
