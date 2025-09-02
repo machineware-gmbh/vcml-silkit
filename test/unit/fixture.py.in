@@ -15,7 +15,15 @@ import sys
 import os
 import re
 import time
+import pexpect
+import threading
 from pexpect.popen_spawn import PopenSpawn
+
+# thread used for copying simulation output to sim.log
+class IOThread(threading.Thread):
+    def __init__(self, p):
+        super(IOThread, self).__init__(target=p.expect, args=(pexpect.EOF,))
+        daemon = True
 
 def try_kill(proc, signum = 15, attempts = 5):
     for attempt in range(attempts):
@@ -27,6 +35,7 @@ def try_kill(proc, signum = 15, attempts = 5):
 
 log = sys.stdout
 env = os.environ
+io = {}
 
 for var in [v for v in re.split(r'(?<!\\);', '@env@') if v]:
     val = var.split('=', 1)
@@ -37,11 +46,16 @@ for var, val in env.items():
 cmd = ['$<TARGET_FILE:silkit_registry>']
 pr = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
 pr.expect('SIL Kit Registry listening on silkit://localhost:8500')
+io[0] = IOThread(pr)
+io[0].start()
+
 
 if '@mode@' != 'autonomous':
     cmd = ['$<TARGET_FILE:silkit_system_controller>']
     cmd.extend('@ARGN@'.split(';'))
     pc = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
+    io[1] = IOThread(pc)
+    io[1].start()
     pc.expect('Creating participant \'SystemController\' with registry silkit://localhost:8500')
 
 part = []
@@ -53,6 +67,8 @@ for var in '@ARGN@'.split(';'):
     cmd.append('@CMAKE_CURRENT_SOURCE_DIR@')
     print(cmd)
     part.append(PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8'))
+    io[2] = IOThread(part[i])
+    io[2].start()
     part[i].expect('SilKit Version: 4.0.56')
     i += 1
 
