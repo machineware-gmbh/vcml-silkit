@@ -207,17 +207,51 @@ void participant::end_of_elaboration() {
         mwr::cpu_yield();
 }
 
+static constexpr const char* state2string(ParticipantState state) {
+    switch (state) {
+    case ParticipantState::Invalid:
+        return "Invalid";
+    case ParticipantState::ServicesCreated:
+        return "ServciesCreated";
+    case ParticipantState::CommunicationInitializing:
+        return "CommunictationInitializing";
+    case ParticipantState::ReadyToRun:
+        return "ReadyToRun";
+    case ParticipantState::Running:
+        return "Running";
+    case ParticipantState::Paused:
+        return "Paused";
+    case ParticipantState::Stopping:
+        return "Stopping";
+    case ParticipantState::Stopped:
+        return "Stopped";
+    case ParticipantState::Error:
+        return "Error";
+    case ParticipantState::ShuttingDown:
+        return "ShuttingDown";
+    case ParticipantState::Shutdown:
+        return "Shutdown";
+    case ParticipantState::Aborting:
+        return "Aborting";
+    default:
+        return "Unknown";
+    }
+}
+
 participant::~participant() {
     if (m_lifecycle) {
         auto state = m_lifecycle->State();
         if (state == ParticipantState::Running ||
             state == ParticipantState::Paused)
             m_lifecycle->Stop("User requested");
-        else if (state != ParticipantState::Shutdown) {
-            const char*
-                msg = "end of simulation while not running and not shutdown";
+        else if (state != ParticipantState::Shutdown &&
+                 state != ParticipantState::ShuttingDown &&
+                 state != ParticipantState::Stopped &&
+                 state != ParticipantState::Stopping) {
+            const string msg = mkstr("end of simulation while in: %s",
+                                     state2string(state));
             m_lifecycle->ReportError(msg);
-            VCML_ERROR("%s", msg);
+            VCML_ERROR("%s", msg.c_str());
         }
 
         m_done.wait_for(100ms);
