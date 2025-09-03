@@ -63,10 +63,10 @@ public:
         eth_frame frame("ff:ff:ff:ff:ff:ff", "12:23:34:45:56:67", data);
         sc_event ev;
 
-        // in autonomous mode wait for everyone to get ready
-        mwr::sleep(1);
-
         if (part.name == "vcml_participant0") {
+            // in autonomous mode wait for everyone to get ready
+            mwr::sleep(1);
+
             eth_tx.send(frame);
             EXPECT_CALL(*this, eth_receive(eth_match_socket(&eth_rx),
                                            eth_match_frame(frame)))
