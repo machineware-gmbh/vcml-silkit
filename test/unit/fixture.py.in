@@ -33,7 +33,6 @@ def try_kill(proc, signum = 15, attempts = 5):
         except Exception:
             time.sleep(0.1)
 
-log = sys.stdout
 env = os.environ
 io = {}
 
@@ -44,6 +43,7 @@ for var, val in env.items():
     print(f'{var} = {val}')
 
 cmd = ['$<TARGET_FILE:silkit_registry>']
+log = open(f'pr.log', 'w')
 pr = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
 pr.expect('SIL Kit Registry listening on silkit://localhost:8500')
 io[0] = IOThread(pr)
@@ -53,6 +53,7 @@ io[0].start()
 if '@mode@' != 'autonomous':
     cmd = ['$<TARGET_FILE:silkit_system_controller>']
     cmd.extend('@ARGN@'.split(';'))
+    log = open('pc.log', 'w')
     pc = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
     io[1] = IOThread(pc)
     io[1].start()
@@ -65,7 +66,7 @@ for var in '@ARGN@'.split(';'):
     cmd.extend(['-c', f'system.participant.mode=@mode@'])
     cmd.extend(['-c', f'system.participant.name={var}'])
     cmd.append('@CMAKE_CURRENT_SOURCE_DIR@')
-    print(cmd)
+    log = open(f'part{i}.log', 'w')
     part.append(PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8'))
     io[2] = IOThread(part[i])
     io[2].start()
