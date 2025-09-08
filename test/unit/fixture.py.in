@@ -19,7 +19,20 @@ import pexpect
 import threading
 from pexpect.popen_spawn import PopenSpawn
 
-# thread used for copying simulation output to sim.log
+def print_error():
+    print('!!! simulation terminated with error !!!')
+    print('!!! Registry output !!!')
+    with open('pr.log', 'r') as file:
+        print(file.read())
+    if '@mode' != 'autonomous':
+        print('!!! Controller output !!!')
+        with open('pr.log', 'r') as file:
+            print(file.read())
+    for i in range(len(part)):
+        print(f'!!! Participant {i} output !!!')
+        with open(f'part{i}.log', 'r') as file:
+            print(file.read())
+
 class IOThread(threading.Thread):
     def __init__(self, p):
         super(IOThread, self).__init__(target=p.expect, args=(pexpect.EOF,))
@@ -70,7 +83,12 @@ for var in '@ARGN@'.split(';'):
     part.append(PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8'))
     io[2] = IOThread(part[i])
     io[2].start()
-    part[i].expect('SilKit Version: 4.0.56')
+    try:
+        part[i].expect('SilKit Version: 4.0.56')
+    except Execption as e:
+        print_error()
+        print(str(e), flush=True)
+        os.exit(-1)
     i += 1
 
 result = 0
@@ -87,17 +105,7 @@ pr.kill(15)
 pr.wait()
 
 if res != 0:
-    print('!!! simulation terminated with error !!!')
-    print('!!! Registry output !!!')
-    with open('pr.log', 'r') as file:
-        print(file.read())
-    if '@mode' != 'autonomous':
-        print('!!! Controller output !!!')
-        with open('pr.log', 'r') as file:
-            print(file.read())
-    for i in range(len(part)):
-        print(f'!!! Participant {i} output !!!')
-        with open(f'part{i}.log', 'r') as file:
-            print(file.read())
+    print_error()
+    print('', flush=True)
 
 sys.exit(result)
