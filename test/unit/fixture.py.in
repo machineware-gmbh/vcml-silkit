@@ -86,4 +86,18 @@ if '@mode@' != 'autonomous':
 pr.kill(15)
 pr.wait()
 
+if res != 0:
+    print('!!! simulation terminated with error !!!')
+    print('!!! Registry output !!!')
+    with open('pr.log', 'r') as file:
+        print(file.read())
+    if '@mode' != 'autonomous':
+        print('!!! Controller output !!!')
+        with open('pr.log', 'r') as file:
+            print(file.read())
+    for i in range(len(part)):
+        print(f'!!! Participant {i} output !!!')
+        with open(f'part{i}.log', 'r') as file:
+            print(file.read())
+
 sys.exit(result)
