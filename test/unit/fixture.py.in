@@ -56,7 +56,7 @@ for var, val in env.items():
     print(f'{var} = {val}')
 
 cmd = ['$<TARGET_FILE:silkit_registry>']
-log = open(f'pr.log', 'w')
+log = open('pr.log', 'w')
 pr = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
 pr.expect('SIL Kit Registry listening on silkit://localhost:8500')
 io[0] = IOThread(pr)
@@ -81,14 +81,14 @@ for var in '@ARGN@'.split(';'):
     cmd.append('@CMAKE_CURRENT_SOURCE_DIR@')
     log = open(f'part{i}.log', 'w')
     part.append(PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8'))
-    io[2] = IOThread(part[i])
-    io[2].start()
     try:
         part[i].expect('SilKit Version: 4.0.56')
     except Execption as e:
         print_error()
         print(str(e), flush=True)
         os.exit(-1)
+    io[2] = IOThread(part[i])
+    io[2].start()
     i += 1
 
 result = 0
