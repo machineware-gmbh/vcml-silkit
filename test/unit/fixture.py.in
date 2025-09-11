@@ -19,7 +19,20 @@ import pexpect
 import threading
 from pexpect.popen_spawn import PopenSpawn
 
-# thread used for copying simulation output to sim.log
+def print_error():
+    print('!!! simulation terminated with error !!!')
+    print('!!! Registry output !!!')
+    with open('pr.log', 'r') as file:
+        print(file.read())
+    if '@mode' != 'autonomous':
+        print('!!! Controller output !!!')
+        with open('pr.log', 'r') as file:
+            print(file.read())
+    for i in range(len(part)):
+        print(f'!!! Participant {i} output !!!')
+        with open(f'part{i}.log', 'r') as file:
+            print(file.read())
+
 class IOThread(threading.Thread):
     def __init__(self, p):
         super(IOThread, self).__init__(target=p.expect, args=(pexpect.EOF,))
@@ -33,7 +46,6 @@ def try_kill(proc, signum = 15, attempts = 5):
         except Exception:
             time.sleep(0.1)
 
-log = sys.stdout
 env = os.environ
 io = {}
 
@@ -44,6 +56,7 @@ for var, val in env.items():
     print(f'{var} = {val}')
 
 cmd = ['$<TARGET_FILE:silkit_registry>']
+log = open('pr.log', 'w')
 pr = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
 pr.expect('SIL Kit Registry listening on silkit://localhost:8500')
 io[0] = IOThread(pr)
@@ -53,6 +66,7 @@ io[0].start()
 if '@mode@' != 'autonomous':
     cmd = ['$<TARGET_FILE:silkit_system_controller>']
     cmd.extend('@ARGN@'.split(';'))
+    log = open('pc.log', 'w')
     pc = PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8')
     io[1] = IOThread(pc)
     io[1].start()
@@ -65,11 +79,16 @@ for var in '@ARGN@'.split(';'):
     cmd.extend(['-c', f'system.participant.mode=@mode@'])
     cmd.extend(['-c', f'system.participant.name={var}'])
     cmd.append('@CMAKE_CURRENT_SOURCE_DIR@')
-    print(cmd)
+    log = open(f'part{i}.log', 'w')
     part.append(PopenSpawn(cmd, env=env, logfile=log, timeout=None, encoding='utf-8'))
+    try:
+        part[i].expect('SilKit Version: 4.0.56')
+    except Execption as e:
+        print_error()
+        print(str(e), flush=True)
+        os.exit(-1)
     io[2] = IOThread(part[i])
     io[2].start()
-    part[i].expect('SilKit Version: 4.0.56')
     i += 1
 
 result = 0
@@ -84,5 +103,9 @@ if '@mode@' != 'autonomous':
 
 pr.kill(15)
 pr.wait()
+
+if res != 0:
+    print_error()
+    print('', flush=True)
 
 sys.exit(result)
