@@ -71,6 +71,8 @@ public:
     VCML_KIND(silkit::participant);
 
     virtual const char* version() const override;
+
+    static participant& instance();
 };
 
 } // namespace silkit

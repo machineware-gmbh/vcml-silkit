@@ -23,6 +23,12 @@ class IEthernetController;
 
 } // namespace Ethernet
 
+namespace Can {
+
+class ICanController;
+
+} // namespace Can
+
 namespace Orchestration {
 
 class ILifecycleService;
