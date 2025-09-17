@@ -98,5 +98,9 @@ const char* service_eth::version() const {
     return VCML_SILKIT_VERSION_STRING;
 }
 
+VCML_EXPORT_MODEL(vcml::silkit::service_eth, name, args) {
+    return new service_eth(name, participant::instance());
+}
+
 } // namespace silkit
 } // namespace vcml

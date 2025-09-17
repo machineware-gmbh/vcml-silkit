@@ -37,7 +37,8 @@ configure_file(${src}/vcml/silkit/version.h.in
 add_library(vcml-silkit STATIC
             ${src}/vcml/silkit/participant.cpp
             ${src}/vcml/silkit/service.cpp
-            ${src}/vcml/silkit/service_eth.cpp)
+            ${src}/vcml/silkit/service_eth.cpp
+            ${src}/vcml/silkit/service_can.cpp)
 
 target_compile_options(vcml-silkit PRIVATE ${MWR_COMPILER_WARN_FLAGS})
 target_compile_definitions(vcml-silkit PRIVATE cxx_std_17)

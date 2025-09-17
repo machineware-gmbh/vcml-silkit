@@ -90,9 +90,14 @@ const char* participant::version() const {
     return VCML_SILKIT_VERSION_STRING;
 }
 
+participant& participant::instance() {
+    static participant singleton("participant");
+    return singleton;
+}
+
 void participant::shutdown_handler() {
     log_info("Shutdown requested");
-    request_stop();
+    on_next_update(request_stop);
 }
 
 void participant::start_handler() {
@@ -259,6 +264,10 @@ participant::~participant() {
 
     if (m_silkit_part)
         delete m_silkit_part;
+}
+
+VCML_EXPORT_MODEL(vcml::silkit::participant, name, args) {
+    return new participant(name);
 }
 
 } // namespace silkit
