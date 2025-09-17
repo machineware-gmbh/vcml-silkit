@@ -97,7 +97,7 @@ participant& participant::instance() {
 
 void participant::shutdown_handler() {
     log_info("Shutdown requested");
-    request_stop();
+    on_next_update(request_stop);
 }
 
 void participant::start_handler() {
