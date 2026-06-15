@@ -30,10 +30,16 @@ void service_eth::send_to_guest(eth_frame frame) {
 }
 
 void service_eth::eth_receive(const eth_frame& frame) {
+    if (part().mode == SILKIT_MODE_OFF)
+        return;
+
     send_to_host(frame);
 }
 
 void service_eth::eth_transmit() {
+    if (part().mode == SILKIT_MODE_OFF)
+        return;
+
     while (true) {
         wait(m_ev);
 
@@ -62,6 +68,9 @@ service_eth::service_eth(const sc_module_name& nm, participant& part):
 }
 
 void service_eth::start_of_simulation() {
+    if (part().mode == SILKIT_MODE_OFF)
+        return;
+
     m_eth_controller = part().silkit_part()->CreateEthernetController(
         controller_name, network_name);
     VCML_ERROR_ON(!m_eth_controller, "no silkit ethernet controller created");

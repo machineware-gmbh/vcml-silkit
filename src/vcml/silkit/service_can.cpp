@@ -57,10 +57,16 @@ void service_can::send_to_guest(can_frame frame) {
 }
 
 void service_can::can_receive(can_frame& frame) {
+    if (part().mode == SILKIT_MODE_OFF)
+        return;
+
     send_to_host(frame);
 }
 
 void service_can::can_transmit() {
+    if (part().mode == SILKIT_MODE_OFF)
+        return;
+
     while (true) {
         wait(m_ev);
 
@@ -89,6 +95,9 @@ service_can::service_can(const sc_module_name& nm, participant& part):
 }
 
 void service_can::start_of_simulation() {
+    if (part().mode == SILKIT_MODE_OFF)
+        return;
+
     m_can_controller = part().silkit_part()->CreateCanController(
         controller_name, network_name);
     VCML_ERROR_ON(!m_can_controller, "no silkit can controller created");
