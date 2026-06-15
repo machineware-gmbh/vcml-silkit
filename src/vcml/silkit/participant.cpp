@@ -37,6 +37,8 @@ istream& operator>>(istream& is, silkit_mode& m) {
         m = SILKIT_MODE_COORDINATED;
     else if (str == "time_sync")
         m = SILKIT_MODE_TIME_SYNC;
+    else if (str == "off")
+        m = SILKIT_MODE_OFF;
     else
         m = SILKIT_MODE_UNKNOWN;
 
@@ -51,6 +53,8 @@ ostream& operator<<(ostream& os, silkit_mode m) {
         return os << "coordinated";
     case SILKIT_MODE_TIME_SYNC:
         return os << "time_sync";
+    case SILKIT_MODE_OFF:
+        return os << "off";
     default:
         return os << "unknown";
     }
@@ -58,7 +62,7 @@ ostream& operator<<(ostream& os, silkit_mode m) {
 
 using namespace SilKit::Services::Orchestration;
 
-participant::participant(const sc_module_name& nm):
+participant::participant(const sc_module_name& nm, silkit_mode default_mode):
     module(nm),
     m_lifecycle(),
     m_silkit_part(),
@@ -70,11 +74,12 @@ participant::participant(const sc_module_name& nm):
     registry_uri("registry_uri", "silkit://localhost:8500"),
     name("name", "vcml_participant"),
     cfg_path("cfg_path", ""),
-    mode("mode", SILKIT_MODE_COORDINATED),
+    mode("mode", default_mode),
     timestep("timestep", sc_time(1, SC_MS)) {
     log_info("SilKit Version: %s", SilKit::Version::String());
 
-    if (mode != SILKIT_MODE_AUTONOMOUS && has_instance) {
+    if (mode != SILKIT_MODE_AUTONOMOUS && mode != SILKIT_MODE_OFF &&
+        has_instance) {
         VCML_ERROR(
             "Multiple SIL Kit participants within a single SystemC instance "
             "are only supported in SIL Kit autonomous mode");
@@ -151,6 +156,8 @@ void participant::time_sync_thread() {
 }
 
 void participant::end_of_elaboration() {
+    if (mode == SILKIT_MODE_OFF)
+        return;
     if (mode == SILKIT_MODE_UNKNOWN)
         VCML_ERROR("silkit mode %s not implementd", to_string(mode).c_str());
 

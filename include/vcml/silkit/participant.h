@@ -26,7 +26,8 @@ namespace vcml {
 namespace silkit {
 
 enum silkit_mode {
-    SILKIT_MODE_AUTONOMOUS = 0,
+    SILKIT_MODE_OFF = 0,
+    SILKIT_MODE_AUTONOMOUS,
     SILKIT_MODE_COORDINATED,
     SILKIT_MODE_TIME_SYNC,
     SILKIT_MODE_UNKNOWN,
@@ -66,7 +67,8 @@ public:
 
     virtual void end_of_elaboration() override;
 
-    participant(const sc_module_name& nm);
+    participant(const sc_module_name& nm,
+                silkit_mode default_mode = SILKIT_MODE_COORDINATED);
     virtual ~participant();
     VCML_KIND(silkit::participant);
 
