@@ -26,10 +26,10 @@ namespace vcml {
 namespace silkit {
 
 enum silkit_mode {
-    SILKIT_MODE_AUTONOMOUS = 0,
+    SILKIT_MODE_OFF = 0,
+    SILKIT_MODE_AUTONOMOUS,
     SILKIT_MODE_COORDINATED,
     SILKIT_MODE_TIME_SYNC,
-    SILKIT_MODE_OFF,
     SILKIT_MODE_UNKNOWN,
 };
 
