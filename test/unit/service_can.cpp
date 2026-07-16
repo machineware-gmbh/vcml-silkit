@@ -57,8 +57,8 @@ public:
 
         can_frame frame;
         frame.msgid = 0x123;
-        frame.dlc = len2dlc(4);
         frame.flags = 0;
+        frame.data.resize(4);
         frame.data[0] = 0x11;
         frame.data[1] = 0x22;
         frame.data[2] = 0x33;
