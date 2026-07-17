@@ -55,10 +55,10 @@ public:
     virtual void run_test() override {
         wait(SC_ZERO_TIME);
 
-        can_frame frame;
-        frame.msgid = 0x123;
-        frame.flags = 0;
+        can_frame frame{};
+        frame.canid = 0x123;
         frame.data.resize(4);
+        frame.dlc = len2dlc(frame.length());
         frame.data[0] = 0x11;
         frame.data[1] = 0x22;
         frame.data[2] = 0x33;

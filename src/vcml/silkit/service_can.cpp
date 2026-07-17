@@ -22,28 +22,28 @@ using namespace SilKit::Services::Can;
 static CanFrame to_silkit_can(const can_frame& vcml_frame) {
     CanFrame silkit_frame{};
     silkit_frame.canId = vcml_frame.id();
-    silkit_frame.dlc = vcml_frame.dlc();
+    silkit_frame.dlc = vcml_frame.dlc;
     silkit_frame.flags = 0;
 
     if (vcml_frame.is_canxl()) {
         silkit_frame.sdt = vcml_frame.sdt;
-        silkit_frame.vcid = vcml_frame.vcid();
+        silkit_frame.vcid = vcml_frame.vcid;
         silkit_frame.af = vcml_frame.af;
         silkit_frame.flags = (CanFrameFlagMask)CanFrameFlag::Xlf;
-        if (vcml_frame.is_sec())
+        if (vcml_frame.sec)
             silkit_frame.flags |= (CanFrameFlagMask)CanFrameFlag::Sec;
     } else {
         if (vcml_frame.is_canfd()) {
             silkit_frame.flags = (CanFrameFlagMask)CanFrameFlag::Fdf;
-            if (vcml_frame.is_brs())
+            if (vcml_frame.brs)
                 silkit_frame.flags |= (CanFrameFlagMask)CanFrameFlag::Brs;
-            if (vcml_frame.is_esi())
+            if (vcml_frame.esi)
                 silkit_frame.flags |= (CanFrameFlagMask)CanFrameFlag::Esi;
         }
 
-        if (vcml_frame.is_eff())
+        if (vcml_frame.eff)
             silkit_frame.flags |= (CanFrameFlagMask)CanFrameFlag::Ide;
-        if (vcml_frame.is_rtr())
+        if (vcml_frame.rtr)
             silkit_frame.flags |= (CanFrameFlagMask)CanFrameFlag::Rtr;
     }
 
@@ -55,33 +55,29 @@ static CanFrame to_silkit_can(const can_frame& vcml_frame) {
 static can_frame to_vcml_can(const CanFrame& silkit_frame) {
     can_frame vcml_frame{};
 
+    vcml_frame.canid = silkit_frame.canId;
+    vcml_frame.dlc = silkit_frame.dlc;
+
     if (silkit_frame.flags & (CanFrameFlagMask)CanFrameFlag::Xlf) {
-        vcml_frame.flags = CAN_XL_XLF;
+        vcml_frame.xlf = true;
+        vcml_frame.fdf = true;
+
         if (silkit_frame.flags & (CanFrameFlagMask)CanFrameFlag::Sec)
-            vcml_frame.flags |= CAN_XL_SEC;
+            vcml_frame.sec = true;
         vcml_frame.af = silkit_frame.af;
         vcml_frame.sdt = silkit_frame.sdt;
-        vcml_frame.msgid = silkit_frame.canId & CAN_SID;
-        vcml_frame.set_vcid(silkit_frame.vcid);
+        vcml_frame.vcid = silkit_frame.vcid;
     } else { // CAN classic or CAN-FD
-        if (silkit_frame.flags & (CanFrameFlagMask)CanFrameFlag::Ide) {
-            vcml_frame.msgid = silkit_frame.canId & CAN_EID;
-            vcml_frame.msgid |= CAN_EFF;
-        } else {
-            vcml_frame.msgid = silkit_frame.canId & CAN_SID;
-        }
-
+        if (silkit_frame.flags & (CanFrameFlagMask)CanFrameFlag::Ide)
+            vcml_frame.eff = true;
         if (silkit_frame.flags & (CanFrameFlagMask)CanFrameFlag::Rtr)
-            vcml_frame.msgid |= CAN_RTR;
-
-        vcml_frame.flags = 0;
-        if (silkit_frame.flags & (CanFrameFlagMask)CanFrameFlag::Fdf) {
-            vcml_frame.flags = CAN_FD_FDF;
-            if (silkit_frame.flags & (CanFrameFlagMask)CanFrameFlag::Brs)
-                vcml_frame.flags |= CAN_FD_BRS;
-            if (silkit_frame.flags & (CanFrameFlagMask)CanFrameFlag::Esi)
-                vcml_frame.flags |= CAN_FD_ESI;
-        }
+            vcml_frame.rtr = true;
+        if (silkit_frame.flags & (CanFrameFlagMask)CanFrameFlag::Fdf)
+            vcml_frame.fdf = true;
+        if (silkit_frame.flags & (CanFrameFlagMask)CanFrameFlag::Brs)
+            vcml_frame.brs = true;
+        if (silkit_frame.flags & (CanFrameFlagMask)CanFrameFlag::Esi)
+            vcml_frame.esi = true;
     }
 
     vcml_frame.data.resize(silkit_frame.dataField.size());
