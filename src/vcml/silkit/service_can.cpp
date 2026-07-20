@@ -134,7 +134,7 @@ service_can::service_can(const sc_module_name& nm, participant& part):
     network_name("network_name", "vcml_default_network"),
     can_tx("can_tx"),
     can_rx("can_rx") {
-    SC_HAS_PROCESS(can_eth);
+    SC_HAS_PROCESS(service_can);
     SC_THREAD(can_transmit);
 }
 
