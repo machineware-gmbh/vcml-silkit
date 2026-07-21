@@ -1,3 +1,73 @@
+vcml-silkit
+Copyright (C) 2024 MachineWare GmbH
+
+Dual Licensing
+==============
+
+This project is made available under a dual-license model:
+
+1. GNU General Public License version 2 only ("GPLv2-only")
+2. MachineWare Proprietary License
+
+Default License
+---------------
+
+Unless you have entered into a separate written license agreement with
+MachineWare granting rights under the MachineWare Proprietary License,
+this software is licensed to you solely under the terms of the
+GNU General Public License version 2 ("GPLv2"), and no later version.
+
+A complete copy of the GPLv2 license is included below in this file.
+
+Alternative Proprietary License
+-------------------------------
+
+MachineWare may make this software available under a separate proprietary
+license. Rights under the MachineWare Proprietary License are granted only
+to parties that have executed a valid written license agreement with
+MachineWare covering this software.
+
+If you have such an agreement in place, you may use, modify, distribute,
+and otherwise exercise rights in the software under the terms and
+conditions of that proprietary agreement instead of the GPLv2.
+
+No Automatic Proprietary Rights
+-------------------------------
+
+Receipt, possession, access, download, or use of this source code does not
+by itself grant any rights under the MachineWare Proprietary License.
+Those rights exist only to the extent explicitly granted in a separate
+written agreement with MachineWare.
+
+License Choice
+--------------
+
+If you have a valid MachineWare Proprietary License agreement for this
+software, you may choose to use the software under either:
+
+    (a) the GPLv2-only license; or
+    (b) the MachineWare Proprietary License agreement.
+
+If you do not have such an agreement, option (a) applies
+exclusively.
+
+SPDX Identifier
+---------------
+
+Unless otherwise specified in individual source files, the applicable
+license identifier for this project is:
+
+    SPDX-License-Identifier: GPL-2.0-only
+
+Parties operating under a valid MachineWare Proprietary License agreement
+may additionally rely on the rights granted by that agreement.
+
+
+======================================================================
+GNU GENERAL PUBLIC LICENSE
+Version 2, June 1991
+======================================================================
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 2, June 1991
 
