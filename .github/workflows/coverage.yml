@@ -8,19 +8,22 @@ on:
 
 env:
   BUILD_TYPE: DEBUG
-  GITHUB_TOKEN: ${{secrets.CI_TOKEN}}
 
 jobs:
   coverage:
     name: coverage
-    runs-on: self-hosted-ubuntu-24.04
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout Model
         uses: actions/checkout@v6
         with:
           submodules: 'recursive'
-          token: ${{secrets.CI_TOKEN}}
+
+      - name: Setup Dependencies
+        run: |
+          sudo apt-get update -y -qq
+          sudo apt-get install gcovr
 
       - name: Configure
         run: |
