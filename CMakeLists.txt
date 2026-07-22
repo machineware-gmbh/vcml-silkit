@@ -9,7 +9,7 @@
  ##############################################################################
 
 cmake_minimum_required(VERSION 3.16)
-project(vcml-silkit VERSION 2025.08.19 LANGUAGES C CXX)
+project(vcml-silkit VERSION 2026.07.22 LANGUAGES C CXX)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(FindGithubRepo)
