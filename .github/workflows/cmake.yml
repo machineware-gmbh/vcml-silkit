@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [self-hosted-ubuntu-24.04, self-hosted-ubuntu-22.04, self-hosted-ubuntu-20.04, self-hosted-rhel-8, self-hosted-ubuntu-24.04-arm64, self-hosted-windows-2022]
+        os: [ubuntu-26.04, ubuntu-24.04, ubuntu-22.04, ubuntu-26.04-arm, ubuntu-24.04-arm, windows-2022, windows-2025]
 
     steps:
       - name: Checkout Model
@@ -26,6 +26,15 @@ jobs:
         with:
           submodules: 'recursive'
           token: ${{secrets.CI_TOKEN}}
+
+      - name: Setup Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.14'
+
+      - name: Install Python dependencies
+        run: |
+          pip install pexpect
 
       - name: Configure
         if: runner.os != 'Windows'
@@ -63,4 +72,3 @@ jobs:
               BUILD/Testing/Temporary/LastTest.log
           include-hidden-files: true
           retention-days: 7
-
