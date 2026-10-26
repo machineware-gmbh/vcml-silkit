@@ -9,7 +9,7 @@ on:
 jobs:
   style:
     name: style
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-slim
 
     steps:
     - name: Checkout
@@ -20,4 +20,3 @@ jobs:
 
     - name: Check Format
       run: ./utils/format.py -n
-
