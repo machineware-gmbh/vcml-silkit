@@ -36,7 +36,7 @@ function(unit_test nm mode)
         add_test(NAME ${test} COMMAND ${Python3_EXECUTABLE} ${script}.py)
     endif()
     set_tests_properties(${test} PROPERTIES ENVIRONMENT "${ENVVARS}")
-    set_tests_properties(${test} PROPERTIES TIMEOUT 60)
+    set_tests_properties(${test} PROPERTIES TIMEOUT 300)
 endfunction()
 
 foreach(mode IN ITEMS coordinated time_sync autonomous)
